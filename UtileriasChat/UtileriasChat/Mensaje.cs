@@ -10,8 +10,7 @@ namespace UtileriasChat
         SOLICITUD,
         SERVIDOR,
         CHAT,
-        ESTADO
-        
+        ESTADO        
     }
     public enum DetalleSolicitud
     {

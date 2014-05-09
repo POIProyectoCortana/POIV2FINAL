@@ -233,11 +233,11 @@ namespace Chat_Client
             }
             private void frm_Principal_FormClosed(object sender, FormClosedEventArgs e)
             {
-                //Mensaje Logged = new Mensaje(Mensaje.TipoDeMensaje.ClientLoggedOut, this.Nickname, "ALL", this.Nickname, DateTime.Now);
-                //Padre.EnviarDatos(Logged);
-                //tmr_Principal.Enabled = false;
-                //this.Padre.ClientSocket.Close();
-                //this.Padre.Show();
+                Mensaje Logged = new Mensaje(TipoMensaje.SERVIDOR,DetalleServidor.DESCONEXION, Red.Broadcast, DateTime.Now.ToString());
+                this.EnviarDatos(Logged);                
+                tmr_Principal.Enabled = false;
+                this._serverSocket.Close();
+                this._padre.Show();
             }
             private void tmr_Principal_Tick(object sender, EventArgs e)
             {

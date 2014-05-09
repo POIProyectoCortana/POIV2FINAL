@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Windows.Forms;
 using UtileriasChat;
+using System.IO;
 
 namespace Chat_Server
 {
@@ -21,6 +22,8 @@ namespace Chat_Server
         public static Queue<Mensaje> _mensajeQueue = new Queue<Mensaje>();
         public static List<Mensaje> _mensajeList = new List<Mensaje>();
         public static List<Mensaje> _mensajeListPending = new List<Mensaje>();
+        public static List<string> _usuarioArchivo = new List<string>();
+
         #endregion      
 
         #region Propiedades
@@ -117,7 +120,11 @@ namespace Chat_Server
                     NewClient.GetDataFromClient();
                     _clientList.Add(NewClient);
                     int Index = _clientList.IndexOf(NewClient);
+                    _clientList[Index].ListIndex = Index;
                     _clientList[Index].Start();
+                    if (_usuarioArchivo.Contains(_clientList[Index].Contacto.Username))
+                    { _usuarioArchivo.Add(_clientList[Index].Contacto.Username); }
+                    _clientList[Index].MensajeList = SendOfflineMessages(_clientList[Index].Contacto.Username);
                     lbl_conectados.Text = "Clientes conectados: " + _clientList.Count.ToString();
                     _idGenerator++;
                 }
@@ -129,7 +136,6 @@ namespace Chat_Server
         }               
         public void AddMsj(Mensaje mensaje)
         {
-           // _mensajeQueue.Enqueue(M);
             _mensajeList.Add(mensaje);
         }
         public void EntregarMensajes()
@@ -138,7 +144,7 @@ namespace Chat_Server
             {
                 while (_mensajeList.Count > 0)
                 {
-                    Mensaje Entregar = _mensajeList[0];//_mensajeQueue.Dequeue();
+                    Mensaje Entregar = _mensajeList[0];
                     _mensajeList.RemoveAt(0);
                     int Clientes = _clientList.Count;
                     if (Entregar.Destinatario.Username == "Broadcast")
@@ -157,8 +163,7 @@ namespace Chat_Server
                                 else
                                 {
                                     _mensajeListPending.Add(Entregar);
-                                }
-                                //C.MensajeQueue.Enqueue(neEntregar);
+                                }                                
                             }
                         }
                 }
@@ -171,15 +176,61 @@ namespace Chat_Server
         }
         internal void WriteLog(Exception ex)
         {
-
             this.txtLog.Text += DateTime.Now + "--" + ex.Message + "\n";
             //return null;
+        }
+        internal void DesconectarClienteLista(int listIndex)
+        {
+            _clientList.RemoveAt(listIndex); 
+        }
+        private void cargaIniciarlUsuarios()
+        {
+            try
+            {
+                string line = "";
+                if (!File.Exists("Archivos\\usuarios.txt"))
+                {
+                    File.Create("Archivos\\usuarios.txt");
+                }
+                else
+                {
+                    StreamReader objReader = new StreamReader("Archivos\\usuarios.txt");
+                    while (line != null)
+                    {
+                        line = objReader.ReadLine();
+                        if (line != null)
+                        {
+                            if (!_usuarioArchivo.Contains(line))
+                            {
+                                _usuarioArchivo.Add(line);
+                            }
+                        }
+                    }
+                    objReader.Close(); 
+                }
+            }
+            catch(Exception ex)
+            {
+
+            }
+        }
+        private List<Mensaje> SendOfflineMessages(string username)
+        {
+            List<Mensaje> ptes= new List<Mensaje>();
+            foreach (Mensaje m in _mensajeListPending)
+            {
+                if(m.Destinatario.Username.Equals(username))
+                {
+                    ptes.Add(m);
+                }
+            }
+            return ptes;
         }
         #endregion
 
         private void frm_ServerMain_Load(object sender, EventArgs e)
         {
-
+            cargaIniciarlUsuarios(); 
         }
     }
     

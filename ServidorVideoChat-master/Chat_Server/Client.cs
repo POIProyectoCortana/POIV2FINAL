@@ -11,6 +11,7 @@ namespace Chat_Server
     public class Client
     {
         delegate void WriteLogCallback(Exception ex);
+        delegate void DesconectarClienteCallback(int listIndex);
         #region Campos
         //private static int StreamBuffer = 1024;
         private TcpClient _clientSocket;
@@ -25,6 +26,13 @@ namespace Chat_Server
         private frm_ServerMain _parent;
         private IFormatter _serializador;
         private Contacto _contacto;
+        private int listIndex;
+
+        public int ListIndex
+        {
+            get { return listIndex; }
+            set { listIndex = value; }
+        }
         #endregion
 
         #region Propiedades
@@ -135,6 +143,7 @@ namespace Chat_Server
         {
             try
             {
+
                 while (true)
                 {
                     Listening();
@@ -168,13 +177,21 @@ namespace Chat_Server
                 if (_clientSocket.Connected)
                 {
                     _serializador.Serialize(_networkStream, mensaje);
-                    _networkStream.Flush();                    
+                    _networkStream.Flush();
+                }
+                else
+                {
+ 
                 }
                 
             }
             catch (Exception ex)
             {
+                this._clientSocket.Close();
+                this._chatThread.Abort();
+                DisconnectclientList();
                  WriteLog(ex);
+
             }
         }
 
@@ -190,6 +207,16 @@ namespace Chat_Server
                 _parent.WriteLog(ex);
             }                      
         }
+        private void DisconnectclientList()
+        {
+            
+                DesconectarClienteCallback d = new DesconectarClienteCallback(_parent.DesconectarClienteLista);
+                d.Invoke(this.listIndex);
+                //_parent.txtLog.Invoke(d, new object[] { ex });
+              
+        }
+
+       
         #endregion
     }
 }
