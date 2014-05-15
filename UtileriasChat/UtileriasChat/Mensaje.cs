@@ -62,7 +62,6 @@ namespace UtileriasChat
             private Contacto _destinatario;            
             private String _contenido;
             private bool _esEncriptado;
-
            
             public static readonly string[,] EmoticonList =
             {

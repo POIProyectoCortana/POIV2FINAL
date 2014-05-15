@@ -11,7 +11,7 @@ namespace Chat_Client
         public string Nickname { get;set;}
         public int Id { get; set; }
         public frm_Principal Padre;
-        public Queue<Mensaje> QRecibidos;
+        public List<Mensaje> QRecibidos;
         public string Contacto;
         public frm_Chat(string C,frm_Principal P)
         {
@@ -19,7 +19,7 @@ namespace Chat_Client
             Contacto = C;
             InitializeComponent();
             this.Text = this.Text.ToString() + Contacto;
-            QRecibidos= new Queue<Mensaje>();
+            QRecibidos= new List<Mensaje>();
             tmr_Conversacion.Enabled = true;
         }
         private void frm_Chat_FormClosed(object sender, FormClosedEventArgs e)
@@ -27,7 +27,7 @@ namespace Chat_Client
             string filename =Nickname + Contacto + DateTime.Now.Date.Year.ToString()+DateTime.Now.Date.Month.ToString()+DateTime.Now.Date.Day.ToString()+".txt";
             string directory = "Conversaciones//";
             StreamWriter SW;
-            frm_Principal._lConversaciones.Remove(this);
+            frm_Principal.Conversaciones.Remove(this);
             if (File.Exists(directory + filename))
             {
                 SW=File.AppendText(directory + filename);                
@@ -43,8 +43,9 @@ namespace Chat_Client
         {
             while (QRecibidos.Count > 0)
             {
-                Mensaje M = QRecibidos.Dequeue();
+                Mensaje M = QRecibidos[0];
                 rtb_Contenido.AppendText(M.Contenido);
+                QRecibidos.RemoveAt(0);
             }
         }
         private void tmr_Conversacion_Tick(object sender, EventArgs e)
@@ -55,6 +56,11 @@ namespace Chat_Client
         {
             //Mensaje Msj = new Mensaje(Mensaje.TipoDeMensaje.Message,Padre.Nickname,this.Nickname,this.txt_Contenido.Text,DateTime.Now);
              //frm_Principal._qMensajesAEnviar.Enqueue(Msj);
+        }
+
+        private void frm_Chat_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

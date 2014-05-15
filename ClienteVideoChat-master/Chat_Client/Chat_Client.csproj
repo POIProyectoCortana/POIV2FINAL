@@ -49,6 +49,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extensiones.cs" />
     <Compile Include="frm_Chat.cs">
       <SubType>Form</SubType>
     </Compile>

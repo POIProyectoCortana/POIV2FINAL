@@ -121,6 +121,7 @@
             this.MaximizeBox = false;
             this.Name = "frm_Chat";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frm_Chat_FormClosed);
+            this.Load += new System.EventHandler(this.frm_Chat_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

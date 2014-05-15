@@ -9,6 +9,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Chat_Client
 {
+    
     public partial class frm_Principal : Form
     {
         #region Campos
@@ -17,7 +18,9 @@ namespace Chat_Client
             public NetworkStream _serverStream;
             public byte[] _datosFromServer;
             public byte[] _datosToServer;
-            public static List<frm_Chat> _lConversaciones = new List<frm_Chat>();
+            private static List<frm_Chat> _lConversaciones = new List<frm_Chat>();
+
+          
             //public static Queue<Mensaje> _qMensajesRecibidos = new Queue<Mensaje>();
             public static List<Mensaje> _lMensajesRecibidos = new List<Mensaje>();
             //public static Queue<Mensaje> _qMensajesAEnviar = new Queue<Mensaje>();
@@ -31,6 +34,11 @@ namespace Chat_Client
         #region Propiedades
             public string Nickname { get; set; }
             public int IdServer { get; set; }
+            public static List<frm_Chat> Conversaciones
+            {
+                get { return frm_Principal._lConversaciones; }
+                set { frm_Principal._lConversaciones = value; }
+            }
         #endregion
 
         #region Constructor
@@ -107,6 +115,14 @@ namespace Chat_Client
                 switch(mensaje.DetalleChat)
                 {
                     case DetalleChat.TEXTO:
+                        if (mensaje.Destinatario.Username.Equals(Red.Broadcast.Username))
+                        {
+                            this.rtb_ChatGeneral.AppendText(mensaje.Contenido);
+                        }
+                        else
+                        {
+                            ActualizarConversacion(mensaje); 
+                        }
                         break;
                     case DetalleChat.ZUMBIDO:
                         break;
@@ -168,7 +184,7 @@ namespace Chat_Client
                     EnviarDatos(mensaje);
                 }
             }
-            public void EnviarDatos(Mensaje M)
+            public  void EnviarDatos(Mensaje M)
             {
                 try
                 {
@@ -208,6 +224,26 @@ namespace Chat_Client
                     ltb_Conectados.Items.Add(C.Username+"/"+C.Estado.ToString());
                 }
             }
+            public void ActualizarConversacion(Mensaje mensaje)
+            {
+                frm_Chat ventana=Conversaciones.Find(
+                    delegate(frm_Chat chat)
+                    {
+                        return chat.Nickname == mensaje.Remitente.Username;
+                    }
+                    );
+                if (ventana == null)
+                {
+                    Conversaciones.Add(new frm_Chat(mensaje.Remitente.Username, this)
+                    {
+                        QRecibidos = { mensaje}
+                    });
+                }
+                else
+                {
+                    ventana.QRecibidos.Add(mensaje); 
+                }
+            }            
         #endregion
 
         #region Eventos
