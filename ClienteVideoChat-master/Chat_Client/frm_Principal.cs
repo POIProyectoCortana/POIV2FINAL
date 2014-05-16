@@ -117,7 +117,8 @@ namespace Chat_Client
                     case DetalleChat.TEXTO:
                         if (mensaje.Destinatario.Username.Equals(Red.Broadcast.Username))
                         {
-                            this.rtb_ChatGeneral.AppendText(mensaje.Contenido);
+                            //this.rtb_ChatGeneral.AppendText(mensaje.Contenido);
+                            this.rtb_ChatGeneral.PrintRTB(mensaje);
                         }
                         else
                         {

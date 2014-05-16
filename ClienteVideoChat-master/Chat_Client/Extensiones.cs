@@ -4,32 +4,46 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using UtileriasChat;
-
+using System.Drawing;
+using System.IO;
 namespace Chat_Client
 {
     public static class Extensiones
     {        
         public static void PrintRTB(this RichTextBox rtb,Mensaje mensaje)
-        {      
-      
-//            public void InsertImage()  {
-//  ...
-//  string lstrFile = fileDialog.FileName;
-//  Bitmap myBitmap = new Bitmap(lstrFile);
-//  // Copy the bitmap to the clipboard.
-//  Clipboard.SetDataObject(myBitmap);
-//  // Get the format for the object type.
-//  DataFormats.Format myFormat = DataFormats.GetFormat (DataFormats.Bitmap);
-//  // After verifying that the data can be pasted, paste
-//  if(NoteBox.CanPaste(myFormat)) {
-//    NoteBox.Paste(myFormat);
-//  }
-//  else {
-//    MessageBox.Show("The data format that you attempted site" + 
-//      " is not supportedby this control.");
-//  }
-//  ...
-//}
+        {
+            string wanted_path = Path.GetDirectoryName(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory()));
+            int TextAlreadyLength = rtb.TextLength;
+            rtb.AppendText(mensaje.Remitente.Username+": "+mensaje.Contenido+Environment.NewLine);
+            for (int i = 0; i < Mensaje.EmoticonList.Length / 3; i++)
+            {
+                int indexfound = 0;
+                int indexNext = 0;
+                int EmoticonLength = Mensaje.EmoticonList[i, 0].Length;
+                while (true)
+                {
+                    indexfound = mensaje.Contenido.IndexOf(Mensaje.EmoticonList[i, 0], indexNext); 
+                    if (indexfound >= 0)
+                    {
+                        try
+                        {
+                           // string wanted_path = Path.GetDirectoryName(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory()));                           
+                            Bitmap image = new Bitmap(wanted_path+Mensaje.EmoticonList[i, 1]);
+                            System.Windows.Forms.Clipboard.SetDataObject(image);
+                            rtb.Select(indexfound + TextAlreadyLength, EmoticonLength);
+                            rtb.Paste();
+                            indexNext += EmoticonLength;
+                        }
+                        catch (Exception ex)
+                        { 
+                        }
+                    }
+                    else { break; }
+                }
+
+            }
         }
     }
 }
+
+
