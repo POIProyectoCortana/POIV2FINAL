@@ -17,7 +17,7 @@ namespace Chat_Client
             rtb.AppendText(mensaje.Remitente.Username+": "+mensaje.Contenido+Environment.NewLine);
             for (int i = 0; i < Mensaje.EmoticonList.Length / 3; i++)
             {
-                int indexfound = 0;
+                int indexfound = -1;
                 int indexNext = 0;
                 int EmoticonLength = Mensaje.EmoticonList[i, 0].Length;
                 while (true)
@@ -27,12 +27,19 @@ namespace Chat_Client
                     {
                         try
                         {
-                           // string wanted_path = Path.GetDirectoryName(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory()));                           
-                            Bitmap image = new Bitmap(wanted_path+Mensaje.EmoticonList[i, 1]);
-                            System.Windows.Forms.Clipboard.SetDataObject(image);
-                            rtb.Select(indexfound + TextAlreadyLength, EmoticonLength);
-                            rtb.Paste();
-                            indexNext += EmoticonLength;
+                            string emoticonoPath = wanted_path + "\\" + Mensaje.EmoticonList[i, 1];
+                            if (File.Exists(emoticonoPath))
+                            {
+                                Bitmap image = new Bitmap(emoticonoPath);
+                                System.Windows.Forms.Clipboard.SetDataObject(image);
+                                rtb.Select(indexfound + TextAlreadyLength, EmoticonLength);
+                                rtb.Paste();
+                                indexNext += EmoticonLength;
+                            }
+                            else
+                            {
+                                indexNext += EmoticonLength;
+                            }
                         }
                         catch (Exception ex)
                         { 

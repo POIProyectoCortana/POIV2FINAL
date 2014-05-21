@@ -57,7 +57,7 @@
             this.lbl_DEstado.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lbl_DEstado.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbl_DEstado.ForeColor = System.Drawing.Color.DarkRed;
-            this.lbl_DEstado.Location = new System.Drawing.Point(118, 9);
+            this.lbl_DEstado.Location = new System.Drawing.Point(137, 9);
             this.lbl_DEstado.Name = "lbl_DEstado";
             this.lbl_DEstado.Size = new System.Drawing.Size(162, 57);
             this.lbl_DEstado.TabIndex = 2;
@@ -69,7 +69,7 @@
             this.grb_DatosServer.Controls.Add(this.lbl_DataServer);
             this.grb_DatosServer.Location = new System.Drawing.Point(13, 81);
             this.grb_DatosServer.Name = "grb_DatosServer";
-            this.grb_DatosServer.Size = new System.Drawing.Size(267, 75);
+            this.grb_DatosServer.Size = new System.Drawing.Size(286, 75);
             this.grb_DatosServer.TabIndex = 3;
             this.grb_DatosServer.TabStop = false;
             this.grb_DatosServer.Text = "Datos del servidor";
@@ -79,7 +79,7 @@
             this.lbl_DataServer.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbl_DataServer.Location = new System.Drawing.Point(7, 20);
             this.lbl_DataServer.Name = "lbl_DataServer";
-            this.lbl_DataServer.Size = new System.Drawing.Size(254, 39);
+            this.lbl_DataServer.Size = new System.Drawing.Size(273, 39);
             this.lbl_DataServer.TabIndex = 0;
             this.lbl_DataServer.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
@@ -89,25 +89,27 @@
             // 
             // lbl_conectados
             // 
-            this.lbl_conectados.Location = new System.Drawing.Point(13, 160);
+            this.lbl_conectados.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.lbl_conectados.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.lbl_conectados.Location = new System.Drawing.Point(138, 160);
             this.lbl_conectados.Name = "lbl_conectados";
-            this.lbl_conectados.Size = new System.Drawing.Size(267, 20);
+            this.lbl_conectados.Size = new System.Drawing.Size(159, 20);
             this.lbl_conectados.TabIndex = 4;
             this.lbl_conectados.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.lbl_conectados.Click += new System.EventHandler(this.lbl_conectados_Click);
             // 
             // txtLog
             // 
-            this.txtLog.Location = new System.Drawing.Point(4, 174);
+            this.txtLog.Location = new System.Drawing.Point(12, 183);
             this.txtLog.Multiline = true;
             this.txtLog.Name = "txtLog";
-            this.txtLog.Size = new System.Drawing.Size(287, 96);
+            this.txtLog.Size = new System.Drawing.Size(287, 107);
             this.txtLog.TabIndex = 5;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(16, 160);
+            this.label1.Location = new System.Drawing.Point(12, 167);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(28, 13);
             this.label1.TabIndex = 6;
@@ -118,7 +120,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(294, 272);
+            this.ClientSize = new System.Drawing.Size(309, 293);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.txtLog);
             this.Controls.Add(this.lbl_conectados);

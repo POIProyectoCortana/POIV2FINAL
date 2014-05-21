@@ -68,6 +68,12 @@
     <Compile Include="frm_Conectar.Designer.cs">
       <DependentUpon>frm_Conectar.cs</DependentUpon>
     </Compile>
+    <Compile Include="frm_crearGrupo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frm_crearGrupo.Designer.cs">
+      <DependentUpon>frm_crearGrupo.cs</DependentUpon>
+    </Compile>
     <Compile Include="frm_Principal.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -84,6 +90,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frm_Conectar.resx">
       <DependentUpon>frm_Conectar.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frm_crearGrupo.resx">
+      <DependentUpon>frm_crearGrupo.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frm_Principal.resx">
       <DependentUpon>frm_Principal.cs</DependentUpon>

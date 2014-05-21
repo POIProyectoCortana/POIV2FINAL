@@ -19,16 +19,20 @@ namespace Chat_Client
             public byte[] _datosFromServer;
             public byte[] _datosToServer;
             private static List<frm_Chat> _lConversaciones = new List<frm_Chat>();
-
-          
-            //public static Queue<Mensaje> _qMensajesRecibidos = new Queue<Mensaje>();
+            public static List<Sesion> _lGrupos= new List<Sesion>();
             public static List<Mensaje> _lMensajesRecibidos = new List<Mensaje>();
-            //public static Queue<Mensaje> _qMensajesAEnviar = new Queue<Mensaje>();
             public static List<Mensaje> _lMensajesAEnviar = new List<Mensaje>();
             public static int _buffer = 1024;
-             public static List<Contacto> _contactos= new List<Contacto>();
+            public static List<Contacto> _contactos= new List<Contacto>();
             private Contacto _contacto;
             private IFormatter _serializador;
+            private Contacto userContact;
+            public Contacto UserContact
+            {
+                get { return userContact; }
+                set {
+                    userContact = value; }
+            }
         #endregion
 
         #region Propiedades
@@ -50,17 +54,15 @@ namespace Chat_Client
                 this.Nickname = U;
                 _datosFromServer = new byte[_buffer];
                 _serializador = new BinaryFormatter();
+               
                 try
                 {
-                    //_serverSocket = new TcpClient();
-                    //_serverSocket.Connect(IPAddress.Parse(IP), Convert.ToInt32(Port));
                     _serverStream = _serverSocket.GetStream();
                     EnviarDatos(new Mensaje(TipoMensaje.SERVIDOR,DetalleServidor.CONEXION, null,U.ToString()));
                     Mensaje M = RecibirDatos();
                     _contacto = M.Destinatario;
                     this.Text = "Bienvenido " + _contacto.Username + " // ServerId: " + _contacto.Serverid.ToString();
-                    
-                    //Mensaje Logged = new Mensaje(Mensaje.TipoDeMensaje.ClientLoggedIn, this.Nickname, "ALL", this.Nickname, DateTime.Now);
+                    userContact = new Contacto() { Ip = IPAddress.Parse(Red.GetThisMachineIP()), Username = U, Serverid = _contacto.Serverid };                    
                     EnviarDatos(new Mensaje(TipoMensaje.ESTADO,DetalleEstado.DISPONIBLE,this._contacto,Red.Broadcast,"Disponible"));
                 }
                 catch (Exception ex)
@@ -102,11 +104,11 @@ namespace Chat_Client
                         break;
                     case DetalleServidor.NUEVO_DESCONECTADO:
                         break;
-                    case DetalleServidor.NUEVO_SESION:
+                    case DetalleServidor.NUEVO_GRUPO:
                         break;
-                    case DetalleServidor.NUEVO_SESION_CONECTADO:
+                    case DetalleServidor.NUEVO_GRUPO_CONECTADO:
                         break;
-                    case DetalleServidor.NUEVO_SESION_DESCONECTADO:
+                    case DetalleServidor.NUEVO_GRUPO_DESCONECTADO:
                         break;
                 }
             }
@@ -116,8 +118,7 @@ namespace Chat_Client
                 {
                     case DetalleChat.TEXTO:
                         if (mensaje.Destinatario.Username.Equals(Red.Broadcast.Username))
-                        {
-                            //this.rtb_ChatGeneral.AppendText(mensaje.Contenido);
+                        {                            
                             this.rtb_ChatGeneral.PrintRTB(mensaje);
                         }
                         else
@@ -250,8 +251,6 @@ namespace Chat_Client
         #region Eventos
             private void btn_ChatGeneral_Click(object sender, EventArgs e)
             {
-
-                //Mensaje Msj = new Mensaje(Mensaje.TipoDeMensaje.Message, Nickname, "ALL", txt_ChatGeneral.Text, DateTime.Now);
                 Mensaje Msj = new Mensaje(TipoMensaje.CHAT, DetalleChat.TEXTO, _contacto, Red.Broadcast, txt_ChatGeneral.Text);
                 EnviarDatos(Msj);
                 txt_ChatGeneral.Text = "";
@@ -264,9 +263,22 @@ namespace Chat_Client
             }
             private void ltb_Conectados_DoubleClick(object sender, EventArgs e)
             {
-                frm_Chat NuevaVentana = new frm_Chat(this.ltb_Conectados.SelectedItem.ToString(), this);
-                NuevaVentana.Show();
-                _lConversaciones.Add(NuevaVentana);
+                frm_Chat ventana = Conversaciones.Find(
+                    delegate(frm_Chat chat)
+                    {
+                        return chat.Nickname == this.ltb_Conectados.SelectedItem.ToString();
+                    }
+                    );
+                if (ventana == null)
+                {
+                    frm_Chat NuevaVentana = new frm_Chat(this.ltb_Conectados.SelectedItem.ToString(), this);
+                    _lConversaciones.Add(NuevaVentana);
+                    NuevaVentana.Show();
+                }
+                else
+                {
+                    ventana.Show();
+                }   
             }
             private void frm_Principal_FormClosed(object sender, FormClosedEventArgs e)
             {
@@ -282,6 +294,15 @@ namespace Chat_Client
                 EnviarMensajes();
                 EntregarMensajesConversaciones();
             }
+            private void lstGrupos_DoubleClick(object sender, EventArgs e)
+            {
+
+            }
+            private void gruposToolStripMenuItem_Click(object sender, EventArgs e) 
+            {
+                new frm_crearGrupo().ShowDialog();
+            }
         #endregion
+
     }
 }

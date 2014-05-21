@@ -9,7 +9,7 @@ namespace UtileriasChat
         NULL,
         SOLICITUD,
         SERVIDOR,
-        CHAT,
+        CHAT,        
         ESTADO        
     }
     public enum DetalleSolicitud
@@ -27,6 +27,8 @@ namespace UtileriasChat
         NULL,
         TEXTO,
         ZUMBIDO,
+        TEXTO_GRUPAL,
+        ZUMBIDO_GRUPAL
     }
     public enum DetalleEstado
     {
@@ -40,9 +42,9 @@ namespace UtileriasChat
         NULL,
         NUEVO_CONECTADO,
         NUEVO_DESCONECTADO,
-        NUEVO_SESION,
-        NUEVO_SESION_CONECTADO,
-        NUEVO_SESION_DESCONECTADO,
+        NUEVO_GRUPO,
+        NUEVO_GRUPO_CONECTADO,
+        NUEVO_GRUPO_DESCONECTADO,
         CONEXION,
         CONEXION_OK,
         DESCONEXION,
@@ -62,6 +64,7 @@ namespace UtileriasChat
             private Contacto _destinatario;            
             private String _contenido;
             private bool _esEncriptado;
+            private bool _grupoId;
            
             public static readonly string[,] EmoticonList =
             {

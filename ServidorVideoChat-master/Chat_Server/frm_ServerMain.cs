@@ -12,7 +12,9 @@ namespace Chat_Server
     {
         //delegate WriteLogCallback(Exception ex);
         #region Campos
-        private int _idGenerator;
+        delegate void ClientCounterCallback();
+        public int _idGenerator;
+        private int _idSesionGenerator;
         private bool _encendido;
         private List<Client> _clientList;
         private TcpListener _serverListener;
@@ -22,6 +24,7 @@ namespace Chat_Server
         public static Queue<Mensaje> _mensajeQueue = new Queue<Mensaje>();
         public static List<Mensaje> _mensajeList = new List<Mensaje>();
         public static List<Mensaje> _mensajeListPending = new List<Mensaje>();
+        private static List<Sesion> _sesionList; 
         public static List<string> _usuarioArchivo = new List<string>();
 
         #endregion      
@@ -40,7 +43,7 @@ namespace Chat_Server
             lbl_DataServer.Text = "IP: " + Red.GetThisMachineIP() + " \n Puerto: 1234";
             _clientList = new List<Client>();
             _fixedDatos = new byte[_bufferSize];
-            _idGenerator = 1;
+            _idGenerator = _idSesionGenerator= 1;
 
         }  
         #endregion
@@ -97,9 +100,7 @@ namespace Chat_Server
         }
         private void frm_ServerMain_FormClosing(object sender, FormClosingEventArgs e)
         {
-            Mensaje mensaje = new Mensaje(TipoMensaje.SERVIDOR, DetalleServidor.DESCONEXION_OK, Red.Broadcast, "END");
-            // Mensaje M = new Mensaje(Mensaje.TipoDeMensaje.Disconnect_Request, "SERVER", "ALL", "ServerClosed", DateTime.Now);
-            // _mensajeQueue.Enqueue(mensaje);
+            Mensaje mensaje = new Mensaje(TipoMensaje.SERVIDOR, DetalleServidor.DESCONEXION_OK, Red.Broadcast, "END");           
             _mensajeList.Add(mensaje);
         }
         private void lbl_conectados_Click(object sender, EventArgs e)
@@ -131,7 +132,8 @@ namespace Chat_Server
             }
             catch (Exception ex)
             {
-                this.txtLog.Text += DateTime.Now + "--" + ex.Message + "\n";
+                WriteLog(ex);
+               // this.txtLog.Text += DateTime.Now + "--" + ex.Message + "\n";
             }
         }               
         public void AddMsj(Mensaje mensaje)
@@ -146,15 +148,29 @@ namespace Chat_Server
                 {
                     Mensaje Entregar = _mensajeList[0];
                     _mensajeList.RemoveAt(0);
+                    switch(Entregar.Tipo)
+                    {
+                        case TipoMensaje.SERVIDOR:
+                            switch (Entregar.DetalleServidor)
+                            {
+                                case DetalleServidor.NUEVO_GRUPO:
+                                    Sesion grupo = new Sesion(Entregar.Contenido);
+                                    grupo.SessionId = _idSesionGenerator;
+                                    _idSesionGenerator++;
+                                    break;
+                            }
+                            break;
+                    }
                     int Clientes = _clientList.Count;
                     if (Entregar.Destinatario.Username == "Broadcast")
+                    {
                         foreach (Client C in _clientList)
                         {
-                            if (Entregar.Destinatario.Username == "Broadcast" && C.Contacto.Estado== EstadoCliente.CONECTADO)
-                            {                               
+                            if (Entregar.Destinatario.Username == "Broadcast" && C.Contacto.Estado == EstadoCliente.CONECTADO)
+                            {
                                 C.MensajeList.Add(Entregar);
                             }
-                            else if (C.Contacto.Username == Entregar.Destinatario.Username )
+                            else if (C.Contacto.Username == Entregar.Destinatario.Username)
                             {
                                 if (C.Contacto.Estado == EstadoCliente.CONECTADO)
                                 {
@@ -163,25 +179,34 @@ namespace Chat_Server
                                 else
                                 {
                                     _mensajeListPending.Add(Entregar);
-                                }                                
+                                }
                             }
                         }
+                    }
                 }
             }
             catch (Exception ex)
             {
-                this.txtLog.Text += DateTime.Now + "--" + ex.Message + "\n";
+                WriteLog(ex);
+                //this.txtLog.Text += DateTime.Now + "--" + ex.Message + Environment.NewLine;
             }
            
         }
         internal void WriteLog(Exception ex)
         {
-            this.txtLog.Text += DateTime.Now + "--" + ex.Message + "\n";
+            this.txtLog.Text += DateTime.Now + "--" + ex.Message + Environment.NewLine;
             //return null;
         }
         internal void DesconectarClienteLista(int listIndex)
         {
-            _clientList.RemoveAt(listIndex); 
+            _clientList.RemoveAt(listIndex);
+            if (lbl_conectados.InvokeRequired)
+            {
+                ClientCounterCallback d = new ClientCounterCallback(ActualizarConteoConectados);
+                lbl_conectados.Invoke(d);
+            }
+            
+            //ActualizarConteoConectados();
         }
         private void cargaIniciarlUsuarios()
         {
@@ -231,6 +256,11 @@ namespace Chat_Server
         private void frm_ServerMain_Load(object sender, EventArgs e)
         {
             cargaIniciarlUsuarios(); 
+        }
+
+        private void ActualizarConteoConectados()
+        {
+            lbl_conectados.Text = "Clientes conectados: " + _clientList.Count.ToString();
         }
     }
     

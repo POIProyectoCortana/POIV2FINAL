@@ -39,9 +39,14 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.opcionesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.encriptaciónToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.lstGrupos = new System.Windows.Forms.ListBox();
+            this.gruposToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.grb_ChatGeneral.SuspendLayout();
             this.grb_Conectados.SuspendLayout();
             this.menuStrip1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // grb_ChatGeneral
@@ -84,10 +89,11 @@
             // 
             // grb_Conectados
             // 
+            this.grb_Conectados.Controls.Add(this.groupBox1);
             this.grb_Conectados.Controls.Add(this.ltb_Conectados);
             this.grb_Conectados.Location = new System.Drawing.Point(363, 34);
             this.grb_Conectados.Name = "grb_Conectados";
-            this.grb_Conectados.Size = new System.Drawing.Size(200, 375);
+            this.grb_Conectados.Size = new System.Drawing.Size(200, 229);
             this.grb_Conectados.TabIndex = 1;
             this.grb_Conectados.TabStop = false;
             this.grb_Conectados.Text = "Amigos conectados";
@@ -97,8 +103,8 @@
             this.ltb_Conectados.FormattingEnabled = true;
             this.ltb_Conectados.Location = new System.Drawing.Point(6, 20);
             this.ltb_Conectados.Name = "ltb_Conectados";
-            this.ltb_Conectados.Size = new System.Drawing.Size(188, 342);
-            this.ltb_Conectados.TabIndex = 0;
+            this.ltb_Conectados.Size = new System.Drawing.Size(188, 199);
+            this.ltb_Conectados.TabIndex = 0;            
             this.ltb_Conectados.DoubleClick += new System.EventHandler(this.ltb_Conectados_DoubleClick);
             // 
             // tmr_Principal
@@ -114,10 +120,12 @@
             this.menuStrip1.Size = new System.Drawing.Size(571, 24);
             this.menuStrip1.TabIndex = 2;
             this.menuStrip1.Text = "menuStrip1";
+            
             // 
             // opcionesToolStripMenuItem
             // 
             this.opcionesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.gruposToolStripMenuItem,
             this.encriptaciónToolStripMenuItem});
             this.opcionesToolStripMenuItem.Name = "opcionesToolStripMenuItem";
             this.opcionesToolStripMenuItem.Size = new System.Drawing.Size(72, 20);
@@ -129,11 +137,47 @@
             this.encriptaciónToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
             this.encriptaciónToolStripMenuItem.Text = "Encriptación";
             // 
+            // groupBox1
+            // 
+            this.groupBox1.Location = new System.Drawing.Point(0, 235);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(200, 150);
+            this.groupBox1.TabIndex = 3;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Amigos conectados";
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.lstGrupos);
+            this.groupBox2.Location = new System.Drawing.Point(363, 269);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(200, 140);
+            this.groupBox2.TabIndex = 3;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Grupos";
+            // 
+            // lstGrupos
+            // 
+            this.lstGrupos.FormattingEnabled = true;
+            this.lstGrupos.Location = new System.Drawing.Point(7, 20);
+            this.lstGrupos.Name = "lstGrupos";
+            this.lstGrupos.Size = new System.Drawing.Size(187, 108);
+            this.lstGrupos.TabIndex = 0;
+            this.lstGrupos.DoubleClick += new System.EventHandler(this.lstGrupos_DoubleClick);
+            // 
+            // gruposToolStripMenuItem
+            // 
+            this.gruposToolStripMenuItem.Name = "gruposToolStripMenuItem";
+            this.gruposToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
+            this.gruposToolStripMenuItem.Text = "Crear grupo";
+            this.gruposToolStripMenuItem.Click += new System.EventHandler(this.gruposToolStripMenuItem_Click);
+            // 
             // frm_Principal
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(571, 431);
+            this.ClientSize = new System.Drawing.Size(571, 420);
+            this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.grb_Conectados);
             this.Controls.Add(this.grb_ChatGeneral);
             this.Controls.Add(this.menuStrip1);
@@ -147,6 +191,7 @@
             this.grb_Conectados.ResumeLayout(false);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -164,5 +209,9 @@
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem opcionesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem encriptaciónToolStripMenuItem;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.ListBox lstGrupos;
+        private System.Windows.Forms.ToolStripMenuItem gruposToolStripMenuItem;
     }
 }

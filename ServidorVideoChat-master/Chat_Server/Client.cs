@@ -17,7 +17,7 @@ namespace Chat_Server
         private TcpClient _clientSocket;
         private NetworkStream _networkStream;
         private Queue<Mensaje> _mensajeQueue;
-        private List<Mensaje> _mensajeList;
+        private List<Mensaje> _mensajeList;       
         private Thread _chatThread;
         
         //private byte[] _datos;
@@ -187,9 +187,9 @@ namespace Chat_Server
             }
             catch (Exception ex)
             {
-                this._clientSocket.Close();
-                this._chatThread.Abort();
+                this._clientSocket.Close();                
                 DisconnectclientList();
+                this._chatThread.Abort();
                  WriteLog(ex);
 
             }
@@ -211,9 +211,7 @@ namespace Chat_Server
         {
             
                 DesconectarClienteCallback d = new DesconectarClienteCallback(_parent.DesconectarClienteLista);
-                d.Invoke(this.listIndex);
-                //_parent.txtLog.Invoke(d, new object[] { ex });
-              
+                d.Invoke(this.listIndex);                          
         }
 
        

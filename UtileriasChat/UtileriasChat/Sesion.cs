@@ -8,9 +8,21 @@ namespace UtileriasChat
     public class Sesion
     {
         #region Campos
-            private int _sessionId;
-            private string _sessionAlias;
-            private List<Contacto> _integrantes;
+        private int _sessionId;
+
+        public int SessionId
+        {
+            get { return _sessionId; }
+            set { _sessionId = value; }
+        }
+        private string _sessionAlias;
+
+        public string SessionAlias
+        {
+            get { return _sessionAlias; }
+            set { _sessionAlias = value; }
+        }
+            private List<String> _integrantes;
         #endregion
 
         #region Constructores
@@ -18,19 +30,26 @@ namespace UtileriasChat
             {
                 this._sessionId = sesionId;
                 this._sessionAlias = sesionAlias;
+                this._integrantes = new List<string>();
             }
             public Sesion(int sesionId)
             {
                 this._sessionId = sesionId;
+                this._integrantes = new List<string>();
+            }
+            public Sesion(string alias)
+            {
+                this._sessionAlias = alias;
+                this._integrantes = new List<string>();
             }
         #endregion
 
         #region Métodos
-            public void AgregarParticipante(Contacto integrante)
+            public void AgregarParticipante(String integrante)
             {
                 this._integrantes.Add(integrante);
             }
-            public void EliminarParticipante(Contacto integrante)
+            public void EliminarParticipante(String integrante)
             {
                 _integrantes.Remove(integrante);
             }          
