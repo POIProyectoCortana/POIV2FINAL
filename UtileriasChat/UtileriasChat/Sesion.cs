@@ -22,7 +22,13 @@ namespace UtileriasChat
             get { return _sessionAlias; }
             set { _sessionAlias = value; }
         }
-            private List<String> _integrantes;
+        private List<String> _integrantes;
+
+        public List<String> Integrantes
+        {
+            get { return _integrantes; }
+            set { _integrantes = value; }
+        }
         #endregion
 
         #region Constructores

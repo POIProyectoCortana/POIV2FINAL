@@ -91,19 +91,17 @@ namespace Chat_Client
             else
             {      
                 string ContactosGrupo="";
-                Sesion grupo= new Sesion(txtGrupo.Text);
+                
                 var items = new System.Collections.ArrayList(lstEnGrupo.Items);
                 foreach (var item in items)
                 {
-                    ContactosGrupo+=item.ToString()+"|";
-                    grupo.AgregarParticipante(item.ToString());
+                    ContactosGrupo+=item.ToString()+"|";                   
                 }
-                ContactosGrupo.Remove(ContactosGrupo.Length-1);               
+                ContactosGrupo=ContactosGrupo.Remove(ContactosGrupo.Length -1, 1);               
                 Mensaje msj = new Mensaje(TipoMensaje.SERVIDOR, DetalleServidor.NUEVO_GRUPO, null, txtGrupo.Text);                
                 Mensaje msj2 = new Mensaje(TipoMensaje.SERVIDOR,DetalleServidor.NUEVO_GRUPO_CONECTADO,null,ContactosGrupo);
                 frm_Principal._lMensajesAEnviar.Add(msj);
-                frm_Principal._lMensajesAEnviar.Add(msj2);
-                frm_Principal._lGrupos.Add(grupo);
+                frm_Principal._lMensajesAEnviar.Add(msj2);                
                 this.Close();
             }
         }

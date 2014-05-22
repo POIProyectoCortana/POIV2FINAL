@@ -114,8 +114,7 @@ namespace Chat_Server
             {
                 if (_networkStream.DataAvailable)
                 {
-                    _mensaje = RecibirDatos();
-                    //frm_ServerMain._mensajeQueue.Enqueue(_mensaje);
+                    _mensaje = RecibirDatos();                    
                     frm_ServerMain._mensajeList.Add(_mensaje);
                 }
             }

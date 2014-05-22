@@ -21,10 +21,10 @@ namespace Chat_Server
         private byte[] _fixedDatos;
         IPAddress _serverAddress;
         public static int _bufferSize = 512;
-        public static Queue<Mensaje> _mensajeQueue = new Queue<Mensaje>();
+        
         public static List<Mensaje> _mensajeList = new List<Mensaje>();
         public static List<Mensaje> _mensajeListPending = new List<Mensaje>();
-        private static List<Sesion> _sesionList; 
+        private static List<Sesion> _sesionList = new List<Sesion>(); 
         public static List<string> _usuarioArchivo = new List<string>();
 
         #endregion      
@@ -44,7 +44,10 @@ namespace Chat_Server
             _clientList = new List<Client>();
             _fixedDatos = new byte[_bufferSize];
             _idGenerator = _idSesionGenerator= 1;
-
+            _mensajeList.Clear();
+            _mensajeListPending.Clear();
+            _sesionList.Clear();
+            _usuarioArchivo.Clear();
         }  
         #endregion
 
@@ -107,6 +110,10 @@ namespace Chat_Server
         {
 
         }
+        private void frm_ServerMain_Load(object sender, EventArgs e)
+        {
+            cargaIniciarlUsuarios();
+        }
         #endregion
 
         #region Métodos        
@@ -153,10 +160,18 @@ namespace Chat_Server
                         case TipoMensaje.SERVIDOR:
                             switch (Entregar.DetalleServidor)
                             {
+                                
                                 case DetalleServidor.NUEVO_GRUPO:
-                                    Sesion grupo = new Sesion(Entregar.Contenido);
-                                    grupo.SessionId = _idSesionGenerator;
-                                    _idSesionGenerator++;
+                                    int id = 0;
+                                    Mensaje Entregar2 = _mensajeList[0];
+                                    _mensajeList.RemoveAt(0);
+                                    if(Entregar.DetalleServidor== DetalleServidor.NUEVO_GRUPO && Entregar2.DetalleServidor==DetalleServidor.NUEVO_GRUPO_CONECTADO)
+                                    {                                        
+                                        id=GenerarGrupo(Entregar.Contenido,Entregar2.Contenido);
+                                        Entregar.Contenido = Entregar.Contenido + "|" + id.ToString();
+                                    }                                    
+                                    //enviar a todos los destinatarios del grupo con el id de la sesion
+                                    EntregarSesion(id, Entregar, Entregar2);
                                     break;
                             }
                             break;
@@ -187,8 +202,7 @@ namespace Chat_Server
             }
             catch (Exception ex)
             {
-                WriteLog(ex);
-                //this.txtLog.Text += DateTime.Now + "--" + ex.Message + Environment.NewLine;
+                WriteLog(ex);                
             }
            
         }
@@ -205,8 +219,6 @@ namespace Chat_Server
                 ClientCounterCallback d = new ClientCounterCallback(ActualizarConteoConectados);
                 lbl_conectados.Invoke(d);
             }
-            
-            //ActualizarConteoConectados();
         }
         private void cargaIniciarlUsuarios()
         {
@@ -251,18 +263,49 @@ namespace Chat_Server
             }
             return ptes;
         }
-        #endregion
-
-        private void frm_ServerMain_Load(object sender, EventArgs e)
-        {
-            cargaIniciarlUsuarios(); 
-        }
-
         private void ActualizarConteoConectados()
         {
             lbl_conectados.Text = "Clientes conectados: " + _clientList.Count.ToString();
         }
-    }
-    
-   
+        private int GenerarGrupo(string alias,string integrantes)
+        {
+            Sesion grupo = new Sesion(alias);
+            string[] integ = integrantes.Split('|');
+            foreach(string contacto in integ)
+            {
+                grupo.AgregarParticipante(contacto);
+            }
+            grupo.SessionId = _idSesionGenerator;
+            _sesionList.Add(grupo);
+            _idSesionGenerator++;
+            return grupo.SessionId;
+        }
+        private void EntregarSesion(int sesionId,Mensaje msj1,Mensaje msj2)
+        {
+            Sesion grupo = _sesionList.Find(
+                    delegate(Sesion grupos)
+                    {
+                        return grupos.SessionId == sesionId;
+                    }
+            ); 
+            if(grupo != null)
+            {
+                foreach(string username in grupo.Integrantes)                
+                {
+                    Client cliente = _clientList.Find(
+                            delegate(Client clientes)
+                            {
+                                return clientes.Contacto.Username == username;
+                            }
+                    );
+                    if(cliente != null)
+                    {
+                        cliente.MensajeList.Add(msj1);
+                        cliente.MensajeList.Add(msj2);
+                    }                     
+                }
+            }
+        }
+        #endregion
+    }   
 }
