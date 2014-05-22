@@ -1,0 +1,16 @@
+# 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
+# File Created: 11.05.2014 22:18:27
+
+newmtl Material__77
+	Ns 10.0000
+	Ni 1.5000
+	d 0.2800
+	Tr 0.7200
+	Tf 0.2800 0.2800 0.2800 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.7380 0.7380 0.7380
+	Ke 0.0000 0.0000 0.0000
+	map_Ka agua.jpg
+	map_Kd agua.jpg
