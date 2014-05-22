@@ -91,7 +91,7 @@ namespace Chat_Client
                 DetalleChat = DetalleChat.TEXTO,
                 Destinatario = ContactoChat,
                 Contenido = txt_Contenido.Text,
-                Remitente = Padre.UserContact
+                Remitente = frm_Principal.userContact
             };
             frm_Principal._lMensajesAEnviar.Add(Msj);
             rtb_Contenido.PrintRTB(Msj);

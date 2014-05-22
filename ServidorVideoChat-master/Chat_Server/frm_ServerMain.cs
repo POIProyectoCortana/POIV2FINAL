@@ -175,6 +175,17 @@ namespace Chat_Server
                                     break;
                             }
                             break;
+                        case TipoMensaje.CHAT:
+                            switch(Entregar.DetalleChat)
+                            {
+                                case DetalleChat.TEXTO_GRUPAL:
+                                    break;
+                                case DetalleChat.TEXTO:
+                                case DetalleChat.ZUMBIDO:
+                                    EntregarSesion(Entregar.GrupoId, Entregar, null);
+                                    break;
+                            }
+                            break;
                     }
                     int Clientes = _clientList.Count;
                     if (Entregar.Destinatario.Username == "Broadcast")
@@ -301,7 +312,10 @@ namespace Chat_Server
                     if(cliente != null)
                     {
                         cliente.MensajeList.Add(msj1);
-                        cliente.MensajeList.Add(msj2);
+                        if (msj2 != null)
+                        {
+                            cliente.MensajeList.Add(msj2);
+                        }
                     }                     
                 }
             }

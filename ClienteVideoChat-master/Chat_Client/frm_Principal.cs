@@ -8,8 +8,7 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Chat_Client
-{
-    
+{    
     public partial class frm_Principal : Form
     {
         #region Campos
@@ -19,20 +18,15 @@ namespace Chat_Client
             public byte[] _datosFromServer;
             public byte[] _datosToServer;
             private static List<frm_Chat> _lConversaciones = new List<frm_Chat>();
+            private static List<frm_ChatGrupal> _lConversacionesGrupales = new List<frm_ChatGrupal>();
             public static List<Sesion> _lGrupos= new List<Sesion>();
             public static List<Mensaje> _lMensajesRecibidos = new List<Mensaje>();
             public static List<Mensaje> _lMensajesAEnviar = new List<Mensaje>();
             public static int _buffer = 1024;
             public static List<Contacto> _contactos= new List<Contacto>();
-            private Contacto _contacto;
+            public Contacto _contacto;
             private IFormatter _serializador;
-            private Contacto userContact;
-            public Contacto UserContact
-            {
-                get { return userContact; }
-                set {
-                    userContact = value; }
-            }
+            public  static Contacto userContact;            
             int ultimoGrupo;
         #endregion
 
@@ -320,12 +314,39 @@ namespace Chat_Client
             }
             private void lstGrupos_DoubleClick(object sender, EventArgs e)
             {
-
+                frm_ChatGrupal ventana = _lConversacionesGrupales.Find(
+                    delegate(frm_ChatGrupal chat)
+                    {
+                        return chat.SesionAlias == this.lstGrupos.SelectedItem.ToString();
+                    }
+                    );
+                if (ventana == null)
+                {
+                    
+                    Sesion grupo = _lGrupos.Find(
+                    delegate(Sesion grup)
+                    {
+                        return grup.SessionAlias == this.lstGrupos.SelectedItem.ToString();
+                    }
+                    );
+                    if (grupo != null)
+                    {
+                        frm_ChatGrupal NuevaVentana = new frm_ChatGrupal(grupo);
+                        _lConversacionesGrupales.Add(NuevaVentana);
+                        NuevaVentana.Show();
+                    }                    
+                }
+                else
+                {
+                    ventana.Show();
+                }   
             }
             private void gruposToolStripMenuItem_Click(object sender, EventArgs e) 
             {
                 new frm_crearGrupo().ShowDialog();
             }
+            
+            
         #endregion
 
     }

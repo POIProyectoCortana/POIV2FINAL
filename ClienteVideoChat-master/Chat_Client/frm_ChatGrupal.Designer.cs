@@ -28,15 +28,17 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.label1 = new System.Windows.Forms.Label();
-            this.listBox1 = new System.Windows.Forms.ListBox();
-            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.lstIntegrantes = new System.Windows.Forms.ListBox();
+            this.rtbChat = new System.Windows.Forms.RichTextBox();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.opcionesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.guardarConversaciónToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.salirDeConversaciónToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.button1 = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.btnEnviar = new System.Windows.Forms.Button();
+            this.txtChat = new System.Windows.Forms.TextBox();
+            this.tmrConversacion = new System.Windows.Forms.Timer(this.components);
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -48,23 +50,22 @@
             this.label1.Size = new System.Drawing.Size(35, 13);
             this.label1.TabIndex = 0;
             this.label1.Text = "label1";
-            this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
-            // listBox1
+            // lstIntegrantes
             // 
-            this.listBox1.FormattingEnabled = true;
-            this.listBox1.Location = new System.Drawing.Point(12, 50);
-            this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(144, 316);
-            this.listBox1.TabIndex = 1;
+            this.lstIntegrantes.FormattingEnabled = true;
+            this.lstIntegrantes.Location = new System.Drawing.Point(12, 50);
+            this.lstIntegrantes.Name = "lstIntegrantes";
+            this.lstIntegrantes.Size = new System.Drawing.Size(144, 316);
+            this.lstIntegrantes.TabIndex = 1;
             // 
-            // richTextBox1
+            // rtbChat
             // 
-            this.richTextBox1.Location = new System.Drawing.Point(162, 27);
-            this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(440, 278);
-            this.richTextBox1.TabIndex = 2;
-            this.richTextBox1.Text = "";
+            this.rtbChat.Location = new System.Drawing.Point(162, 27);
+            this.rtbChat.Name = "rtbChat";
+            this.rtbChat.Size = new System.Drawing.Size(440, 278);
+            this.rtbChat.TabIndex = 2;
+            this.rtbChat.Text = "";
             // 
             // menuStrip1
             // 
@@ -98,37 +99,43 @@
             this.salirDeConversaciónToolStripMenuItem.Size = new System.Drawing.Size(215, 22);
             this.salirDeConversaciónToolStripMenuItem.Text = "Salir de Conversación";
             // 
-            // button1
+            // btnEnviar
             // 
-            this.button1.Location = new System.Drawing.Point(527, 311);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 55);
-            this.button1.TabIndex = 4;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
+            this.btnEnviar.Location = new System.Drawing.Point(527, 311);
+            this.btnEnviar.Name = "btnEnviar";
+            this.btnEnviar.Size = new System.Drawing.Size(75, 55);
+            this.btnEnviar.TabIndex = 4;
+            this.btnEnviar.Text = "Enviar";
+            this.btnEnviar.UseVisualStyleBackColor = true;
+            this.btnEnviar.Click += new System.EventHandler(this.btnEnviar_Click);
             // 
-            // textBox1
+            // txtChat
             // 
-            this.textBox1.Location = new System.Drawing.Point(162, 311);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(359, 54);
-            this.textBox1.TabIndex = 5;
+            this.txtChat.Location = new System.Drawing.Point(162, 311);
+            this.txtChat.Multiline = true;
+            this.txtChat.Name = "txtChat";
+            this.txtChat.Size = new System.Drawing.Size(359, 54);
+            this.txtChat.TabIndex = 5;
+            // 
+            // tmrConversacion
+            // 
+            this.tmrConversacion.Tick += new System.EventHandler(this.tmrConversacion_Tick);
             // 
             // frm_ChatGrupal
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(614, 369);
-            this.Controls.Add(this.textBox1);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.richTextBox1);
-            this.Controls.Add(this.listBox1);
+            this.Controls.Add(this.txtChat);
+            this.Controls.Add(this.btnEnviar);
+            this.Controls.Add(this.rtbChat);
+            this.Controls.Add(this.lstIntegrantes);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "frm_ChatGrupal";
             this.Text = "frm_ChatGrupal";
+            this.Load += new System.EventHandler(this.frm_ChatGrupal_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
@@ -139,13 +146,14 @@
         #endregion
 
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ListBox listBox1;
-        private System.Windows.Forms.RichTextBox richTextBox1;
+        private System.Windows.Forms.ListBox lstIntegrantes;
+        private System.Windows.Forms.RichTextBox rtbChat;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem opcionesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem guardarConversaciónToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem salirDeConversaciónToolStripMenuItem;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Button btnEnviar;
+        private System.Windows.Forms.TextBox txtChat;
+        private System.Windows.Forms.Timer tmrConversacion;
     }
 }

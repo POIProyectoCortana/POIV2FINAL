@@ -64,7 +64,7 @@ namespace UtileriasChat
             private Contacto _destinatario;            
             private String _contenido;
             private bool _esEncriptado;
-            private bool _grupoId;
+            private int _grupoId;          
            
             public static readonly string[,] EmoticonList =
             {
@@ -155,6 +155,11 @@ namespace UtileriasChat
         {
             get { return _esEncriptado; }
             set { _esEncriptado = value; }
+        }
+        public int GrupoId
+        {
+            get { return _grupoId; }
+            set { _grupoId = value; }
         }
         #endregion
 
