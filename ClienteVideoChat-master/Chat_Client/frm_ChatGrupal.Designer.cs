@@ -135,6 +135,7 @@
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "frm_ChatGrupal";
             this.Text = "frm_ChatGrupal";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frm_ChatGrupal_FormClosed);
             this.Load += new System.EventHandler(this.frm_ChatGrupal_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();

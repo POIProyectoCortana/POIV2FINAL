@@ -90,5 +90,10 @@ namespace Chat_Client
             frm_Principal._lMensajesAEnviar.Add(msj);
             txtChat.Text = "";
         }
+
+        private void frm_ChatGrupal_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            frm_Principal.QuitarVentanaGrupo(this.SesionId);
+        }
     }
 }

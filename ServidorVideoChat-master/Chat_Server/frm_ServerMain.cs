@@ -26,7 +26,6 @@ namespace Chat_Server
         public static List<Mensaje> _mensajeListPending = new List<Mensaje>();
         private static List<Sesion> _sesionList = new List<Sesion>(); 
         public static List<string> _usuarioArchivo = new List<string>();
-
         #endregion      
 
         #region Propiedades
@@ -116,7 +115,7 @@ namespace Chat_Server
         }
         #endregion
 
-        #region Métodos        
+        #region Métodos
         public void ListenerProcess()
         {
             try

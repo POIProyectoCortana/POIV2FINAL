@@ -63,20 +63,31 @@ namespace Chat_Client
         #region Eventos
         private void frm_Chat_FormClosed(object sender, FormClosedEventArgs e)
         {
-            string filename = Nickname + Contacto + DateTime.Now.Date.Year.ToString() + DateTime.Now.Date.Month.ToString() + DateTime.Now.Date.Day.ToString() + ".txt";
-            string directory = "Conversaciones//";
-            StreamWriter SW;
-            frm_Principal.Conversaciones.Remove(this);
-            if (File.Exists(directory + filename))
+            try
             {
-                SW = File.AppendText(directory + filename);
+                string filename = Nickname + Contacto + DateTime.Now.Date.Year.ToString() + DateTime.Now.Date.Month.ToString() + DateTime.Now.Date.Day.ToString() + ".txt";
+                string directory = "Conversaciones//";
+                StreamWriter SW;
+                frm_Principal.Conversaciones.Remove(this);
+                if (File.Exists(directory + filename))
+                {
+                    SW = File.AppendText(directory + filename);
+                }
+                else
+                {
+                    SW = File.CreateText(directory + filename);
+                }
+                SW.Write(rtb_Contenido.Text);
+                SW.Close();
             }
-            else
+            catch (Exception)
             {
-                SW = File.CreateText(directory + filename);
+
             }
-            SW.Write(rtb_Contenido.Text);
-            SW.Close();            
+            finally
+            {
+                frm_Principal.QuitarVentana(this.Nickname);
+            }
         }
         private void tmr_Conversacion_Tick(object sender, EventArgs e)
         {

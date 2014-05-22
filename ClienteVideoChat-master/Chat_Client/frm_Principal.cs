@@ -70,6 +70,32 @@ namespace Chat_Client
         #endregion
 
         #region Métodos
+            public static void QuitarVentanaGrupo(int grupoId)
+            {
+                 frm_ChatGrupal ventana = _lConversacionesGrupales.Find(
+                    delegate(frm_ChatGrupal chat)
+                    {
+                        return chat.SesionId == grupoId;
+                    }
+                    );
+                 if (ventana != null)
+                 {
+                     _lConversacionesGrupales.RemoveAt(_lConversacionesGrupales.IndexOf(ventana));
+                 }
+            }
+            public static void QuitarVentana(string alias)
+            {
+                frm_Chat ventana = _lConversaciones.Find(
+                   delegate(frm_Chat chat)
+                   {
+                       return chat.Nickname == alias;
+                   }
+                   );
+                if (ventana != null)
+                {
+                    _lConversaciones.RemoveAt(_lConversaciones.IndexOf(ventana));
+                }
+            }
             private void ProcesarMensaje(Mensaje mensaje)
             {
                 switch (mensaje.Tipo)
@@ -138,6 +164,9 @@ namespace Chat_Client
                         }
                         break;
                     case DetalleChat.ZUMBIDO:
+                        break;
+                    case DetalleChat.TEXTO_GRUPAL:
+
                         break;
                 }
             }
@@ -259,10 +288,42 @@ namespace Chat_Client
             }
             public void ActualizarGrupos()
             {
+                lstGrupos.Items.Clear();
                 foreach(Sesion s in _lGrupos)
                 {
                     lstGrupos.Items.Add(s.SessionAlias);                  
                 }
+            }
+            public void EntregarChat(Mensaje msj)
+            {}
+            public void EntregarGrupos(Mensaje msj)
+            {
+                frm_ChatGrupal ventana = _lConversacionesGrupales.Find(
+                    delegate(frm_ChatGrupal chat)
+                    {
+                        return chat.SesionId == msj.GrupoId;
+                    }
+                    );
+                if (ventana == null)
+                {
+                    Sesion grupo = _lGrupos.Find(
+                    delegate(Sesion grup)
+                    {
+                        return grup.SessionAlias == this.lstGrupos.SelectedItem.ToString();
+                    }
+                    );
+                    if (grupo != null)
+                    {
+                        frm_ChatGrupal NuevaVentana = new frm_ChatGrupal(grupo);
+                        _lConversacionesGrupales.Add(NuevaVentana);
+                        ventana.LMensajes.Add(msj);
+                        NuevaVentana.Show();
+                    }
+                }
+                else
+                {
+                    ventana.LMensajes.Add(msj);
+                }   
             }
         #endregion
 
@@ -314,32 +375,35 @@ namespace Chat_Client
             }
             private void lstGrupos_DoubleClick(object sender, EventArgs e)
             {
-                frm_ChatGrupal ventana = _lConversacionesGrupales.Find(
-                    delegate(frm_ChatGrupal chat)
-                    {
-                        return chat.SesionAlias == this.lstGrupos.SelectedItem.ToString();
-                    }
-                    );
-                if (ventana == null)
+                if (lstGrupos.SelectedItem != null)
                 {
-                    
-                    Sesion grupo = _lGrupos.Find(
-                    delegate(Sesion grup)
+                    frm_ChatGrupal ventana = _lConversacionesGrupales.Find(
+                        delegate(frm_ChatGrupal chat)
+                        {
+                            return chat.SesionAlias == this.lstGrupos.SelectedItem.ToString();
+                        }
+                        );
+                    if (ventana == null)
                     {
-                        return grup.SessionAlias == this.lstGrupos.SelectedItem.ToString();
+
+                        Sesion grupo = _lGrupos.Find(
+                        delegate(Sesion grup)
+                        {
+                            return grup.SessionAlias == this.lstGrupos.SelectedItem.ToString();
+                        }
+                        );
+                        if (grupo != null)
+                        {
+                            frm_ChatGrupal NuevaVentana = new frm_ChatGrupal(grupo);
+                            _lConversacionesGrupales.Add(NuevaVentana);
+                            NuevaVentana.Show();
+                        }
                     }
-                    );
-                    if (grupo != null)
+                    else
                     {
-                        frm_ChatGrupal NuevaVentana = new frm_ChatGrupal(grupo);
-                        _lConversacionesGrupales.Add(NuevaVentana);
-                        NuevaVentana.Show();
-                    }                    
+                        ventana.Show();
+                    }
                 }
-                else
-                {
-                    ventana.Show();
-                }   
             }
             private void gruposToolStripMenuItem_Click(object sender, EventArgs e) 
             {
