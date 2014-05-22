@@ -33,6 +33,7 @@ namespace Chat_Client
                 set {
                     userContact = value; }
             }
+            int ultimoGrupo;
         #endregion
 
         #region Propiedades
@@ -54,7 +55,7 @@ namespace Chat_Client
                 this.Nickname = U;
                 _datosFromServer = new byte[_buffer];
                 _serializador = new BinaryFormatter();
-               
+                ultimoGrupo = 0;
                 try
                 {
                     _serverStream = _serverSocket.GetStream();
@@ -95,7 +96,7 @@ namespace Chat_Client
                 
             }
             private void ProcesarServidor(Mensaje mensaje)
-            {
+            {               
                 switch (mensaje.DetalleServidor)
                 {
                     case DetalleServidor.NUEVO_CONECTADO:
@@ -105,8 +106,24 @@ namespace Chat_Client
                     case DetalleServidor.NUEVO_DESCONECTADO:
                         break;
                     case DetalleServidor.NUEVO_GRUPO:
+                        string[] datos = mensaje.Contenido.Split('|');
+                        ultimoGrupo = Int32.Parse(datos[1]);
+                        Sesion grupo = new Sesion(ultimoGrupo, datos[0]);
+                        frm_Principal._lGrupos.Add(grupo);
                         break;
                     case DetalleServidor.NUEVO_GRUPO_CONECTADO:
+                        string[] integ = mensaje.Contenido.Split('|');
+                        Sesion grupito = _lGrupos.Find(
+                        delegate(Sesion grupos)
+                        {
+                            return grupos.SessionId == ultimoGrupo;
+                        }
+                        );
+                        foreach (string usr in integ)
+                        {
+                            grupito.AgregarParticipante(usr);
+                        }
+                        ActualizarGrupos();
                         break;
                     case DetalleServidor.NUEVO_GRUPO_DESCONECTADO:
                         break;
@@ -245,7 +262,14 @@ namespace Chat_Client
                 {
                     ventana.QRecibidos.Add(mensaje); 
                 }
-            }            
+            }
+            public void ActualizarGrupos()
+            {
+                foreach(Sesion s in _lGrupos)
+                {
+                    lstGrupos.Items.Add(s.SessionAlias);                  
+                }
+            }
         #endregion
 
         #region Eventos
