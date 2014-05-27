@@ -80,6 +80,12 @@
     <Compile Include="frm_Principal.Designer.cs">
       <DependentUpon>frm_Principal.cs</DependentUpon>
     </Compile>
+    <Compile Include="frm_Videollamada.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frm_Videollamada.Designer.cs">
+      <DependentUpon>frm_Videollamada.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="frm_Chat.resx">
@@ -96,6 +102,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frm_Principal.resx">
       <DependentUpon>frm_Principal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frm_Videollamada.resx">
+      <DependentUpon>frm_Videollamada.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -115,6 +124,42 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="AxVideoChatReceiverLib">
+      <Guid>{E1A9DB8F-E712-4705-8A66-4CD75B534552}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>aximp</WrapperTool>
+      <Isolated>False</Isolated>
+    </COMReference>
+    <COMReference Include="AxVideoChatSenderLib">
+      <Guid>{F9D8E1C3-CDFE-4136-ABF0-36FF5BCA7F83}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>aximp</WrapperTool>
+      <Isolated>False</Isolated>
+    </COMReference>
+    <COMReference Include="VideoChatReceiverLib">
+      <Guid>{E1A9DB8F-E712-4705-8A66-4CD75B534552}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="VideoChatSenderLib">
+      <Guid>{F9D8E1C3-CDFE-4136-ABF0-36FF5BCA7F83}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -18,6 +18,7 @@ namespace Chat_Client
             public byte[] _datosFromServer;
             public byte[] _datosToServer;
             private static List<frm_Chat> _lConversaciones = new List<frm_Chat>();
+            private static List<frm_Videollamada> _lVideollamada = new List<frm_Videollamada>();
             private static List<frm_ChatGrupal> _lConversacionesGrupales = new List<frm_ChatGrupal>();
             public static List<Sesion> _lGrupos= new List<Sesion>();
             public static List<Mensaje> _lMensajesRecibidos = new List<Mensaje>();
@@ -412,6 +413,14 @@ namespace Chat_Client
             
             
         #endregion
+
+            private void videollamadaToolStripMenuItem_Click(object sender, EventArgs e)
+            {
+                //SOLO ME FALTO AGREGAR PARA QUE SE LLAME LA VISTA
+               // frm_Videollamada NuevaVideollamada = new frm_Videollamada(this.ltb_Conectados.SelectedItem.ToString(), this);
+                //_lVideollamada.Add(NuevaVideollamada);
+                //NuevaVideollamada.Show();
+            }
 
     }
 }

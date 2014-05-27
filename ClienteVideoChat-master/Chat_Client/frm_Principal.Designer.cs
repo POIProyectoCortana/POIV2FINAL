@@ -34,15 +34,16 @@
             this.txt_ChatGeneral = new System.Windows.Forms.TextBox();
             this.rtb_ChatGeneral = new System.Windows.Forms.RichTextBox();
             this.grb_Conectados = new System.Windows.Forms.GroupBox();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.ltb_Conectados = new System.Windows.Forms.ListBox();
             this.tmr_Principal = new System.Windows.Forms.Timer(this.components);
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.opcionesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.gruposToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.encriptaciónToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.lstGrupos = new System.Windows.Forms.ListBox();
-            this.gruposToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.videollamadaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.grb_ChatGeneral.SuspendLayout();
             this.grb_Conectados.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -98,13 +99,22 @@
             this.grb_Conectados.TabStop = false;
             this.grb_Conectados.Text = "Amigos conectados";
             // 
+            // groupBox1
+            // 
+            this.groupBox1.Location = new System.Drawing.Point(0, 235);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(200, 150);
+            this.groupBox1.TabIndex = 3;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Amigos conectados";
+            // 
             // ltb_Conectados
             // 
             this.ltb_Conectados.FormattingEnabled = true;
             this.ltb_Conectados.Location = new System.Drawing.Point(6, 20);
             this.ltb_Conectados.Name = "ltb_Conectados";
             this.ltb_Conectados.Size = new System.Drawing.Size(188, 199);
-            this.ltb_Conectados.TabIndex = 0;            
+            this.ltb_Conectados.TabIndex = 0;
             this.ltb_Conectados.DoubleClick += new System.EventHandler(this.ltb_Conectados_DoubleClick);
             // 
             // tmr_Principal
@@ -120,31 +130,29 @@
             this.menuStrip1.Size = new System.Drawing.Size(571, 24);
             this.menuStrip1.TabIndex = 2;
             this.menuStrip1.Text = "menuStrip1";
-            
             // 
             // opcionesToolStripMenuItem
             // 
             this.opcionesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.gruposToolStripMenuItem,
-            this.encriptaciónToolStripMenuItem});
+            this.encriptaciónToolStripMenuItem,
+            this.videollamadaToolStripMenuItem});
             this.opcionesToolStripMenuItem.Name = "opcionesToolStripMenuItem";
-            this.opcionesToolStripMenuItem.Size = new System.Drawing.Size(72, 20);
+            this.opcionesToolStripMenuItem.Size = new System.Drawing.Size(69, 20);
             this.opcionesToolStripMenuItem.Text = "Opciones";
+            // 
+            // gruposToolStripMenuItem
+            // 
+            this.gruposToolStripMenuItem.Name = "gruposToolStripMenuItem";
+            this.gruposToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.gruposToolStripMenuItem.Text = "Crear grupo";
+            this.gruposToolStripMenuItem.Click += new System.EventHandler(this.gruposToolStripMenuItem_Click);
             // 
             // encriptaciónToolStripMenuItem
             // 
             this.encriptaciónToolStripMenuItem.Name = "encriptaciónToolStripMenuItem";
-            this.encriptaciónToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
+            this.encriptaciónToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.encriptaciónToolStripMenuItem.Text = "Encriptación";
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.Location = new System.Drawing.Point(0, 235);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(200, 150);
-            this.groupBox1.TabIndex = 3;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Amigos conectados";
             // 
             // groupBox2
             // 
@@ -165,12 +173,12 @@
             this.lstGrupos.TabIndex = 0;
             this.lstGrupos.DoubleClick += new System.EventHandler(this.lstGrupos_DoubleClick);
             // 
-            // gruposToolStripMenuItem
+            // videollamadaToolStripMenuItem
             // 
-            this.gruposToolStripMenuItem.Name = "gruposToolStripMenuItem";
-            this.gruposToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
-            this.gruposToolStripMenuItem.Text = "Crear grupo";
-            this.gruposToolStripMenuItem.Click += new System.EventHandler(this.gruposToolStripMenuItem_Click);
+            this.videollamadaToolStripMenuItem.Name = "videollamadaToolStripMenuItem";
+            this.videollamadaToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.videollamadaToolStripMenuItem.Text = "Videollamada";
+            this.videollamadaToolStripMenuItem.Click += new System.EventHandler(this.videollamadaToolStripMenuItem_Click);
             // 
             // frm_Principal
             // 
@@ -213,5 +221,6 @@
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.ListBox lstGrupos;
         private System.Windows.Forms.ToolStripMenuItem gruposToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem videollamadaToolStripMenuItem;
     }
 }
