@@ -40,6 +40,7 @@ namespace UtileriasChat
     public enum DetalleServidor
     {
         NULL,
+        LISTA_CONECTADOS,
         NUEVO_CONECTADO,
         NUEVO_DESCONECTADO,
         NUEVO_GRUPO,

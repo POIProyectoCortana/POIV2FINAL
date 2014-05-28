@@ -120,9 +120,23 @@ namespace Chat_Client
             {               
                 switch (mensaje.DetalleServidor)
                 {
+                    case DetalleServidor.LISTA_CONECTADOS:
+                        if (mensaje.Contenido != "")
+                        {
+                            string[] conn = mensaje.Contenido.Split('|');
+                            foreach (string c in conn)
+                            {
+                                _contactos.Add(new Contacto() { Username = c });
+                            }
+                            ActualizarContactos();
+                        }
+                        break;
                     case DetalleServidor.NUEVO_CONECTADO:
-                        _contactos.Add(mensaje.Remitente);
-                        ActualizarContactos();
+                        if (!(mensaje.Remitente.Username == this._contacto.Username))
+                        {
+                            _contactos.Add(mensaje.Remitente);
+                            ActualizarContactos();
+                        }
                         break;
                     case DetalleServidor.NUEVO_DESCONECTADO:
                         break;
@@ -418,7 +432,7 @@ namespace Chat_Client
             {
                 //SOLO ME FALTO AGREGAR PARA QUE SE LLAME LA VISTA
                 frm_Videollamada NuevaVideollamada = new frm_Videollamada();
-                _lVideollamada.Add(NuevaVideollamada);
+                //_lVideollamada.Add(NuevaVideollamada);
                 NuevaVideollamada.Show();
             }
 

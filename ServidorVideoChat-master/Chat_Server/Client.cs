@@ -19,6 +19,7 @@ namespace Chat_Server
         private Queue<Mensaje> _mensajeQueue;
         private List<Mensaje> _mensajeList;       
         private Thread _chatThread;
+        private string lista;
         
         //private byte[] _datos;
         private byte[] _fixedDatos;
@@ -54,7 +55,7 @@ namespace Chat_Server
         #endregion
 
         #region Constructores
-        public Client(frm_ServerMain Server,TcpClient Accepted,int id)
+        public Client(frm_ServerMain Server,TcpClient Accepted,int id,string listaPrevia)
         {
             //INICIALIZA LA CLASE 
             //INICIA LA CONEXION DEL NETWORKSTREAM PARA EL ENVIO Y RECEPCION DE DATOS           
@@ -68,7 +69,7 @@ namespace Chat_Server
             _serializador = new BinaryFormatter();
             _contacto = new Contacto();
             _contacto.Serverid = id;
-
+            lista = listaPrevia;
         }
         #endregion
 
@@ -98,9 +99,14 @@ namespace Chat_Server
                     _contacto.Serverid = ids;
                 }
                 Enviar(new Mensaje(TipoMensaje.SERVIDOR, DetalleServidor.CONEXION_OK, this._contacto, _contacto.Serverid.ToString()));
-                Mensaje mensaje = new Mensaje(TipoMensaje.SERVIDOR, DetalleServidor.NUEVO_CONECTADO, Red.Broadcast, "");
+
+                Mensaje mensaje = new Mensaje(TipoMensaje.SERVIDOR, DetalleServidor.NUEVO_CONECTADO, Red.Broadcast, "");                
                 mensaje.Remitente = this.Contacto;
-                Enviar(mensaje);                
+                Enviar(mensaje);
+
+                 mensaje = new Mensaje(TipoMensaje.SERVIDOR, DetalleServidor.LISTA_CONECTADOS, null, lista);               
+                Enviar(mensaje);   
+
             }
             catch(Exception ex)
             {

@@ -123,7 +123,14 @@ namespace Chat_Server
                 while (_serverListener.Pending())
                 {
                     TcpClient NewTCPClient = _serverListener.AcceptTcpClient();
-                    Client NewClient = new Client(this, NewTCPClient, _idGenerator);
+                    string conectados="";
+                    foreach(Client c in _clientList)
+                    {
+                        conectados+=c.Contacto.Username+"|";
+                    }
+                    if(conectados.Length>0)
+                    conectados=conectados.Remove(conectados.Length-1);
+                    Client NewClient = new Client(this, NewTCPClient, _idGenerator, conectados);
                     NewClient.GetDataFromClient();
                     _clientList.Add(NewClient);
                     int Index = _clientList.IndexOf(NewClient);
@@ -191,20 +198,20 @@ namespace Chat_Server
                     {
                         foreach (Client C in _clientList)
                         {
-                            if (Entregar.Destinatario.Username == "Broadcast" && C.Contacto.Estado == EstadoCliente.CONECTADO)
+                            if (Entregar.Destinatario.Username == "Broadcast" )//&& C.Contacto.Estado == EstadoCliente.CONECTADO)
                             {
                                 C.MensajeList.Add(Entregar);
                             }
                             else if (C.Contacto.Username == Entregar.Destinatario.Username)
                             {
-                                if (C.Contacto.Estado == EstadoCliente.CONECTADO)
-                                {
+                                //if (C.Contacto.Estado == EstadoCliente.CONECTADO)
+                                //{
                                     C.MensajeList.Add(Entregar);
-                                }
-                                else
-                                {
-                                    _mensajeListPending.Add(Entregar);
-                                }
+                                //}
+                                //else
+                                //{
+                                //    _mensajeListPending.Add(Entregar);
+                                //}
                             }
                         }
                     }

@@ -37,11 +37,11 @@
             this.tmr_Conversacion = new System.Windows.Forms.Timer(this.components);
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
-            this.axVideoChatReceiver1 = new AxVideoChatReceiverLib.AxVideoChatReceiver();
-            this.axVideoChatSender1 = new AxVideoChatSenderLib.AxVideoChatSender();
+            //this.axVideoChatReceiver1 = new AxVideoChatReceiverLib.AxVideoChatReceiver();
+            //this.axVideoChatSender1 = new AxVideoChatSenderLib.AxVideoChatSender();
             this.button3 = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.axVideoChatReceiver1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.axVideoChatSender1)).BeginInit();
+            //((System.ComponentModel.ISupportInitialize)(this.axVideoChatReceiver1)).BeginInit();
+            //((System.ComponentModel.ISupportInitialize)(this.axVideoChatSender1)).BeginInit();
             this.SuspendLayout();
             // 
             // rtb_Contenido
@@ -103,21 +103,21 @@
             // 
             // axVideoChatReceiver1
             // 
-            this.axVideoChatReceiver1.Enabled = true;
-            this.axVideoChatReceiver1.Location = new System.Drawing.Point(-1, 2);
-            this.axVideoChatReceiver1.Name = "axVideoChatReceiver1";
-            this.axVideoChatReceiver1.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("axVideoChatReceiver1.OcxState")));
-            this.axVideoChatReceiver1.Size = new System.Drawing.Size(324, 229);
-            this.axVideoChatReceiver1.TabIndex = 7;
+            //this.axVideoChatReceiver1.Enabled = true;
+            //this.axVideoChatReceiver1.Location = new System.Drawing.Point(-1, 2);
+            //this.axVideoChatReceiver1.Name = "axVideoChatReceiver1";
+            //this.axVideoChatReceiver1.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("axVideoChatReceiver1.OcxState")));
+            //this.axVideoChatReceiver1.Size = new System.Drawing.Size(324, 229);
+            //this.axVideoChatReceiver1.TabIndex = 7;
             // 
             // axVideoChatSender1
             // 
-            this.axVideoChatSender1.Enabled = true;
-            this.axVideoChatSender1.Location = new System.Drawing.Point(-1, 237);
-            this.axVideoChatSender1.Name = "axVideoChatSender1";
-            this.axVideoChatSender1.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("axVideoChatSender1.OcxState")));
-            this.axVideoChatSender1.Size = new System.Drawing.Size(113, 79);
-            this.axVideoChatSender1.TabIndex = 8;
+            //this.axVideoChatSender1.Enabled = true;
+            //this.axVideoChatSender1.Location = new System.Drawing.Point(-1, 237);
+            //this.axVideoChatSender1.Name = "axVideoChatSender1";
+            //this.axVideoChatSender1.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("axVideoChatSender1.OcxState")));
+            //this.axVideoChatSender1.Size = new System.Drawing.Size(113, 79);
+            //this.axVideoChatSender1.TabIndex = 8;
             // 
             // button3
             // 
@@ -135,8 +135,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(648, 323);
             this.Controls.Add(this.button3);
-            this.Controls.Add(this.axVideoChatSender1);
-            this.Controls.Add(this.axVideoChatReceiver1);
+            //this.Controls.Add(this.axVideoChatSender1);
+            //this.Controls.Add(this.axVideoChatReceiver1);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.btn_Enviar);
@@ -148,8 +148,8 @@
             this.Name = "frm_Chat";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frm_Chat_FormClosed);
             this.Load += new System.EventHandler(this.frm_Chat_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.axVideoChatReceiver1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.axVideoChatSender1)).EndInit();
+            //((System.ComponentModel.ISupportInitialize)(this.axVideoChatReceiver1)).EndInit();
+            //((System.ComponentModel.ISupportInitialize)(this.axVideoChatSender1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -164,8 +164,8 @@
         private System.Windows.Forms.Timer tmr_Conversacion;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
-        private AxVideoChatReceiverLib.AxVideoChatReceiver axVideoChatReceiver1;
-        private AxVideoChatSenderLib.AxVideoChatSender axVideoChatSender1;
+        //private AxVideoChatReceiverLib.AxVideoChatReceiver axVideoChatReceiver1;
+        //private AxVideoChatSenderLib.AxVideoChatSender axVideoChatSender1;
         private System.Windows.Forms.Button button3;
     }
 }
