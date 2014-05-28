@@ -107,6 +107,7 @@
             this.Controls.Add(this.axVideoChatSender1);
             this.Name = "frm_Videollamada";
             this.Text = "frm_Videollamada";
+            this.Load += new System.EventHandler(this.frm_Videollamada_Load);
             ((System.ComponentModel.ISupportInitialize)(this.axVideoChatSender1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.axVideoChatReceiver1)).EndInit();
             this.ResumeLayout(false);

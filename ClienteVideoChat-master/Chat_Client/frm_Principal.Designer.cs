@@ -41,9 +41,9 @@
             this.opcionesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gruposToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.encriptaciónToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.videollamadaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.lstGrupos = new System.Windows.Forms.ListBox();
-            this.videollamadaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.grb_ChatGeneral.SuspendLayout();
             this.grb_Conectados.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -138,7 +138,7 @@
             this.encriptaciónToolStripMenuItem,
             this.videollamadaToolStripMenuItem});
             this.opcionesToolStripMenuItem.Name = "opcionesToolStripMenuItem";
-            this.opcionesToolStripMenuItem.Size = new System.Drawing.Size(69, 20);
+            this.opcionesToolStripMenuItem.Size = new System.Drawing.Size(63, 20);
             this.opcionesToolStripMenuItem.Text = "Opciones";
             // 
             // gruposToolStripMenuItem
@@ -153,6 +153,13 @@
             this.encriptaciónToolStripMenuItem.Name = "encriptaciónToolStripMenuItem";
             this.encriptaciónToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.encriptaciónToolStripMenuItem.Text = "Encriptación";
+            // 
+            // videollamadaToolStripMenuItem
+            // 
+            this.videollamadaToolStripMenuItem.Name = "videollamadaToolStripMenuItem";
+            this.videollamadaToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.videollamadaToolStripMenuItem.Text = "Videollamada";
+            this.videollamadaToolStripMenuItem.Click += new System.EventHandler(this.videollamadaToolStripMenuItem_Click);
             // 
             // groupBox2
             // 
@@ -172,13 +179,6 @@
             this.lstGrupos.Size = new System.Drawing.Size(187, 108);
             this.lstGrupos.TabIndex = 0;
             this.lstGrupos.DoubleClick += new System.EventHandler(this.lstGrupos_DoubleClick);
-            // 
-            // videollamadaToolStripMenuItem
-            // 
-            this.videollamadaToolStripMenuItem.Name = "videollamadaToolStripMenuItem";
-            this.videollamadaToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.videollamadaToolStripMenuItem.Text = "Videollamada";
-            this.videollamadaToolStripMenuItem.Click += new System.EventHandler(this.videollamadaToolStripMenuItem_Click);
             // 
             // frm_Principal
             // 

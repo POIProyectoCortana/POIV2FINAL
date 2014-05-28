@@ -417,9 +417,9 @@ namespace Chat_Client
             private void videollamadaToolStripMenuItem_Click(object sender, EventArgs e)
             {
                 //SOLO ME FALTO AGREGAR PARA QUE SE LLAME LA VISTA
-               // frm_Videollamada NuevaVideollamada = new frm_Videollamada(this.ltb_Conectados.SelectedItem.ToString(), this);
-                //_lVideollamada.Add(NuevaVideollamada);
-                //NuevaVideollamada.Show();
+                frm_Videollamada NuevaVideollamada = new frm_Videollamada();
+                _lVideollamada.Add(NuevaVideollamada);
+                NuevaVideollamada.Show();
             }
 
     }

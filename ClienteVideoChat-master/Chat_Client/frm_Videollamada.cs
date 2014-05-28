@@ -35,5 +35,10 @@ namespace Chat_Client
 
             axVideoChatReceiver1.Listen("127.0.0.1", 1234);
         }
+
+        private void frm_Videollamada_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }
