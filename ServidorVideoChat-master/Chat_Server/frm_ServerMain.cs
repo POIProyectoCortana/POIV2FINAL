@@ -8,7 +8,7 @@ using System.IO;
 
 namespace Chat_Server
 {
-    public partial class frm_ServerMain : Form
+    public  partial class frm_ServerMain : Form
     {
         //delegate WriteLogCallback(Exception ex);
         #region Campos

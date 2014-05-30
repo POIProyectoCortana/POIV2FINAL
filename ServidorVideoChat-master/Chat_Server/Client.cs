@@ -148,7 +148,6 @@ namespace Chat_Server
         {
             try
             {
-
                 while (true)
                 {
                     Listening();
@@ -213,8 +212,7 @@ namespace Chat_Server
             }                      
         }
         private void DisconnectclientList()
-        {
-            
+        {            
                 DesconectarClienteCallback d = new DesconectarClienteCallback(_parent.DesconectarClienteLista);
                 d.Invoke(this.listIndex);                          
         }
