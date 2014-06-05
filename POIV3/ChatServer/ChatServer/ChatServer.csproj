@@ -45,7 +45,7 @@
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="UtileriasChat">
-      <HintPath>..\..\UtileriasChat\UtileriasChat\bin\Debug\UtileriasChat.dll</HintPath>
+      <HintPath>..\..\UtileriasChat\UtileriasChat\bin\Release\UtileriasChat.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

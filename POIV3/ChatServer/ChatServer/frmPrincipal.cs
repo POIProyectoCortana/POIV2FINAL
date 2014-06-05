@@ -20,6 +20,7 @@ namespace ChatServer
         private List<Contacto> listaContactos;
         private List<ClienteRed> conexiones;
         private List<Mensaje> colaMensajes;
+        private List<Grupo> grupos;
         private TcpListener serverListener;
         #endregion
 
@@ -39,6 +40,11 @@ namespace ChatServer
             get { return colaMensajes; }
             set { colaMensajes = value; }
         }
+        public List<Grupo> Grupo
+        {
+            get { return grupos; }
+            set { grupos = value; } 
+        }
         #endregion
 
         #region Constructores
@@ -46,6 +52,7 @@ namespace ChatServer
         {
             InitializeComponent();
             txtServidor.Text = Red.GetThisMachineIP().ToString();
+            this.conexiones = new List<ClienteRed>();
         }
         #endregion        
        
@@ -69,6 +76,92 @@ namespace ChatServer
             {
                 WriteLog(ex);
             }
+        }
+        public void Delivering()
+        {
+            try
+            {
+                Mensaje msj = new Mensaje();
+                while(colaMensajes.Count>0)
+                {
+                    msj = colaMensajes[0];
+                    colaMensajes.RemoveAt(0);
+                    ProcesarMensaje(msj);
+                }
+            }
+            catch (Exception ex)
+            {
+                WriteLog(ex);
+            }
+        }
+        public void ProcesarMensaje(Mensaje msj)
+        {
+            switch (msj.Tipo)
+            {
+                case TipoMensaje.SERVIDOR:
+                    ProcesarServidor(msj);
+                    break;
+                case TipoMensaje.CHAT:
+                    ProcesarChat(msj);
+                    break;
+                case TipoMensaje.ESTADO:
+                    break;
+                case TipoMensaje.SOLICITUD:
+                    break;
+            }
+        }
+        public void ProcesarServidor(Mensaje msj)
+        {
+            switch (msj.DetalleServidor)
+            {
+                case DetalleServidor.NUEVO_CONECTADO:
+                    break;
+                case DetalleServidor.NUEVO_GRUPO:
+                    break;                    
+            }
+        }
+        public void ProcesarChat(Mensaje msj)
+        {
+            switch (msj.DetalleChat)
+            {
+                case DetalleChat.TEXTO:
+                    break;
+                case DetalleChat.TEXTO_GRUPAL:
+                    break;
+            }
+        }
+        public void DeliverGroup(int grupoId, Mensaje msj1, Mensaje msj2)
+        {
+            Grupo grupo = grupos.Find(
+                    delegate(Grupo grup)
+                    {
+                        return grup.Id == grupoId;
+                    }
+            );
+            if (grupo != null)
+            {
+                foreach (string username in grupo.Integrantes)
+                {
+                    ClienteRed cliente = conexiones.Find(
+                            delegate(ClienteRed client)
+                            {
+                                return client.Usuario == username;
+                            }
+                    );
+                    if (cliente != null)
+                    {
+                        cliente.ColaMensajes.Add(msj1);
+                    }
+                }
+            }
+        }
+        public int GenerateGroup(string alias,List<string>integrantes)
+        {
+            UtileriasChat.Grupo grupo = new Grupo(generadorIdGrupo, alias);
+            grupo.Integrantes = integrantes;
+            grupos.Add(grupo);
+            generadorIdGrupo++;
+            return grupo.Id;
         }
         public void WriteLog(Exception ex)
         {
@@ -94,6 +187,7 @@ namespace ChatServer
                     btnIniciarServidor.Text = "Detener";
                     WriteLog("Servidor iniciado");
                     txtPuerto.Enabled = false;
+                    tmrPerformance.Enabled = true;
                 }
                 else
                 {
@@ -106,8 +200,15 @@ namespace ChatServer
                 WriteLog("Servidor detenido");
                 btnIniciarServidor.Text = "Iniciar";
                 txtPuerto.Enabled = true;
+                tmrPerformance.Enabled = false;
             }
         }
+        private void tmrPerformance_Tick(object sender, EventArgs e)
+        {
+
+        }
         #endregion            
+
+        
     }
 }

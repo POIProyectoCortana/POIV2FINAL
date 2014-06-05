@@ -48,7 +48,7 @@ namespace UtileriasChat
                                 indexNext += EmoticonLength;
                             }
                         }
-                        catch (Exception ex)
+                        catch (Exception)
                         {
                         }
                     }
