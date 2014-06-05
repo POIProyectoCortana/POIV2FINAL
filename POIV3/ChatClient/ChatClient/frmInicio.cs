@@ -20,16 +20,16 @@ namespace ChatClient
         public static List<Mensaje> ColaMensajesSalida = new List<Mensaje>();
         public static List<Contacto> Usuarios= new List<Contacto>();
         public static List<frmChat> Ventanas= new List<frmChat>();
-        public static List<frmGrupo> VentanasGrupal= new List<frmGrupo>();    
-        
+        public static List<frmGrupo> VentanasGrupal= new List<frmGrupo>();
+
+        private frmAcceso padre;              
         string user;
         private bool encriptacion;
         private IFormatter serializador;        
         private NetworkStream serverStream;       
         private DetalleEstado estado;        
         private TcpClient tcpClientServer;       
-        private List<Mensaje> colaMensajesEntrada;        
-            
+        private List<Mensaje> colaMensajesEntrada;   
         private List<Grupo> grupos;        
         #endregion
 
@@ -62,7 +62,12 @@ namespace ChatClient
         {
             get { return grupos; }
             set { grupos = value; }
-        }                       
+        }
+        public frmAcceso Padre
+        {
+            get { return padre; }
+            set { padre = value; }
+        } 
         public DetalleEstado Estado
         {
             get { return estado; }
@@ -91,6 +96,7 @@ namespace ChatClient
             encriptacion = false;
             estado = DetalleEstado.DISPONIBLE;
             serializador = new BinaryFormatter();
+            WriteData(new Contacto() {Estado= EstadoCliente.CONECTADO, Ip= Red.GetThisMachineIP(), Nombre=user});
         }
         #endregion
 
@@ -275,7 +281,17 @@ namespace ChatClient
             });
             txtChatGeneral.Text = "";
         }
+        private void frmInicio_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            //this.Close();
+            serverStream.Close();
+            tcpClientServer.Close();
+            padre.Show();
+
+        }
         #endregion  
+
+        
 
         
 

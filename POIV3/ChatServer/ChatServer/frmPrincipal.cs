@@ -53,6 +53,9 @@ namespace ChatServer
             InitializeComponent();
             txtServidor.Text = Red.GetThisMachineIP().ToString();
             this.conexiones = new List<ClienteRed>();
+            listaContactos = new List<Contacto>();
+            colaMensajes = new List<Mensaje>();
+            grupos = new List<Grupo>();
         }
         #endregion        
        
@@ -165,12 +168,11 @@ namespace ChatServer
         }
         public void WriteLog(Exception ex)
         {
-            this.txtLog.Text += DateTime.Now + "--" + ex.Message + Environment.NewLine;
+            this.txtLog.AppendText(DateTime.Now + "--" + ex.Message + Environment.NewLine);
         }
         public void WriteLog(string ex)
-        {
-            
-            this.txtLog.Text += DateTime.Now + "--" + ex + Environment.NewLine;
+        {            
+            this.txtLog.AppendText(DateTime.Now + "--" + ex + Environment.NewLine);
         }
         #endregion
 
@@ -205,7 +207,8 @@ namespace ChatServer
         }
         private void tmrPerformance_Tick(object sender, EventArgs e)
         {
-
+            Listener();
+            Delivering();
         }
         #endregion            
 

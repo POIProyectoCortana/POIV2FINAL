@@ -230,6 +230,7 @@
             this.MainMenuStrip = this.mnuOpciones;
             this.Name = "frmInicio";
             this.Text = "OnLine Chat";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmInicio_FormClosed);
             this.grb_Conectados.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.grb_ChatGeneral.ResumeLayout(false);

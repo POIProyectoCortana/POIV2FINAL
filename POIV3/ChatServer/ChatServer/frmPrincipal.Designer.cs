@@ -129,10 +129,13 @@
             // 
             // txtLog
             // 
+            this.txtLog.BackColor = System.Drawing.SystemColors.ButtonHighlight;
             this.txtLog.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtLog.Location = new System.Drawing.Point(13, 234);
             this.txtLog.Multiline = true;
             this.txtLog.Name = "txtLog";
+            this.txtLog.ReadOnly = true;
+            this.txtLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.txtLog.Size = new System.Drawing.Size(363, 192);
             this.txtLog.TabIndex = 1;
             // 

@@ -12,12 +12,7 @@ namespace ChatClient
         frmInicio mainScreen;        
         #endregion
 
-        #region Propiedades
-        public TcpClient TcpClientServer
-        {
-            get { return tcpClientServer; }
-            set { tcpClientServer = value; }
-        }
+        #region Propiedades      
         public frmInicio MainScreen
         {
             get { return mainScreen; }
@@ -29,8 +24,7 @@ namespace ChatClient
         public frmAcceso()
         {
             InitializeComponent();
-            tcpClientServer = new TcpClient();
-            mainScreen = new frmInicio();
+            tcpClientServer = new TcpClient();            
         }
         #endregion
 
@@ -60,16 +54,19 @@ namespace ChatClient
                 }
                 else
                 {
-                    tcpClientServer.Connect(ip, puerto);
-                    mainScreen.TcpClientServidor = tcpClientServer;
-                    mainScreen.User = txtUsuario.Text;
+                    TcpClient tcpServer= new TcpClient();
+                    tcpServer.Connect(ip, puerto);
+                    frmInicio main = new frmInicio();
+                    main.TcpClientServidor = tcpClientServer;
+                    main.User = txtUsuario.Text;
+                    main.Padre = this;
                     this.Hide();
-                    mainScreen.Show();
+                    main.Show();
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "ERROR", MessageBoxButtons.OK);
+                MessageBox.Show(ex.Message, "ERROR", MessageBoxButtons.OK,MessageBoxIcon.Error);
             }
         }
         #endregion

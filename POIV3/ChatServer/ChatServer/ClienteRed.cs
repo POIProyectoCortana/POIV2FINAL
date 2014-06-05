@@ -60,6 +60,7 @@ namespace ChatServer
             this.servidor = servidor;
             this.colaMensajes = new List<Mensaje>();
             serializador = new BinaryFormatter();
+            networkStream = tcpClient.GetStream();
         }
         #endregion
 
