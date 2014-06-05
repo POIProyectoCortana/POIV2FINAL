@@ -331,7 +331,7 @@ namespace Chat_Client
                     {
                         frm_ChatGrupal NuevaVentana = new frm_ChatGrupal(grupo);
                         _lConversacionesGrupales.Add(NuevaVentana);
-                        ventana.LMensajes.Add(msj);
+                        NuevaVentana.LMensajes.Add(msj);
                         NuevaVentana.Show();
                     }
                 }

@@ -15,7 +15,7 @@ namespace ChatServer
 {
     public partial class frmPrincipal : Form
     {
-        #region Campos       
+        #region Campos
         private int generadorIdGrupo;
         private List<Contacto> listaContactos;
         private List<ClienteRed> conexiones;

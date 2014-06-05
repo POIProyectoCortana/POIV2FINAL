@@ -42,8 +42,8 @@
             this.gruposToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.encriptaciónToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.videollamadaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.lstGrupos = new System.Windows.Forms.ListBox();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.grb_ChatGeneral.SuspendLayout();
             this.grb_Conectados.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -138,28 +138,37 @@
             this.encriptaciónToolStripMenuItem,
             this.videollamadaToolStripMenuItem});
             this.opcionesToolStripMenuItem.Name = "opcionesToolStripMenuItem";
-            this.opcionesToolStripMenuItem.Size = new System.Drawing.Size(63, 20);
+            this.opcionesToolStripMenuItem.Size = new System.Drawing.Size(72, 20);
             this.opcionesToolStripMenuItem.Text = "Opciones";
             // 
             // gruposToolStripMenuItem
             // 
             this.gruposToolStripMenuItem.Name = "gruposToolStripMenuItem";
-            this.gruposToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.gruposToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
             this.gruposToolStripMenuItem.Text = "Crear grupo";
             this.gruposToolStripMenuItem.Click += new System.EventHandler(this.gruposToolStripMenuItem_Click);
             // 
             // encriptaciónToolStripMenuItem
             // 
             this.encriptaciónToolStripMenuItem.Name = "encriptaciónToolStripMenuItem";
-            this.encriptaciónToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.encriptaciónToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
             this.encriptaciónToolStripMenuItem.Text = "Encriptación";
             // 
             // videollamadaToolStripMenuItem
             // 
             this.videollamadaToolStripMenuItem.Name = "videollamadaToolStripMenuItem";
-            this.videollamadaToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.videollamadaToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
             this.videollamadaToolStripMenuItem.Text = "Videollamada";
             this.videollamadaToolStripMenuItem.Click += new System.EventHandler(this.videollamadaToolStripMenuItem_Click);
+            // 
+            // lstGrupos
+            // 
+            this.lstGrupos.FormattingEnabled = true;
+            this.lstGrupos.Location = new System.Drawing.Point(7, 20);
+            this.lstGrupos.Name = "lstGrupos";
+            this.lstGrupos.Size = new System.Drawing.Size(187, 108);
+            this.lstGrupos.TabIndex = 0;
+            this.lstGrupos.DoubleClick += new System.EventHandler(this.lstGrupos_DoubleClick);
             // 
             // groupBox2
             // 
@@ -170,15 +179,6 @@
             this.groupBox2.TabIndex = 3;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Grupos";
-            // 
-            // lstGrupos
-            // 
-            this.lstGrupos.FormattingEnabled = true;
-            this.lstGrupos.Location = new System.Drawing.Point(7, 20);
-            this.lstGrupos.Name = "lstGrupos";
-            this.lstGrupos.Size = new System.Drawing.Size(187, 108);
-            this.lstGrupos.TabIndex = 0;
-            this.lstGrupos.DoubleClick += new System.EventHandler(this.lstGrupos_DoubleClick);
             // 
             // frm_Principal
             // 
@@ -218,9 +218,9 @@
         private System.Windows.Forms.ToolStripMenuItem opcionesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem encriptaciónToolStripMenuItem;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.ListBox lstGrupos;
         private System.Windows.Forms.ToolStripMenuItem gruposToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem videollamadaToolStripMenuItem;
+        private System.Windows.Forms.ListBox lstGrupos;
+        private System.Windows.Forms.GroupBox groupBox2;
     }
 }

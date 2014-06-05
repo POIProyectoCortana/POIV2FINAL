@@ -34,6 +34,7 @@ namespace UtileriasChat
         #endregion
 
         #region Constructores
+        public Grupo() { }
         public Grupo(int id, string alias)
         {
             this.id = id;
