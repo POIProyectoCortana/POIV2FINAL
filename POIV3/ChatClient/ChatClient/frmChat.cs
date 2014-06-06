@@ -92,16 +92,21 @@ namespace ChatClient
         {
             try
             {
+               
                 if (!txtContenido.Text.Equals(""))
                 {
-                    frmInicio.ColaMensajesSalida.Add(new Mensaje()
+                    Mensaje msj = new Mensaje()
                     {
                         Tipo = TipoMensaje.CHAT,
                         DetalleChat = DetalleChat.TEXTO,
                         Destinatario = contacto.Nombre,
                         Remitente = user,
                         Contenido = txtContenido.Text,
-                    });
+                        Encriptado=frmInicio.Encriptacion
+                    };
+                    if (frmInicio.Encriptacion)
+                    { msj.Encriptar(); }
+                    frmInicio.ColaMensajesSalida.Add(msj);
                 }
             }
             catch (Exception ex)

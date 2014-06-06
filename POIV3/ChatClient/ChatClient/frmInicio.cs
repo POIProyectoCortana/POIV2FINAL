@@ -24,7 +24,7 @@ namespace ChatClient
 
         private frmAcceso padre;              
         string user;
-        private bool encriptacion;
+        internal static bool Encriptacion=false;
         private IFormatter serializador;        
         private NetworkStream serverStream;       
         private DetalleEstado estado;        
@@ -52,11 +52,6 @@ namespace ChatClient
                 tcpClientServer = value;
                 serverStream = tcpClientServer.GetStream();
             }
-        }
-        public bool Encriptacion
-        {
-            get { return encriptacion; }
-            set { encriptacion = value; }
         }
         public List<Grupo> Grupos
         {
@@ -86,21 +81,69 @@ namespace ChatClient
         #endregion
 
         #region Constructores
-        public frmInicio()
+        public frmInicio(TcpClient tcp,string user)
         {
             InitializeComponent();
             colaMensajesEntrada = new List<Mensaje>();
             frmInicio.Ventanas = new List<frmChat>();
             grupos = new List<Grupo>();
             frmInicio.VentanasGrupal = new List<frmGrupo>();
-            encriptacion = false;
             estado = DetalleEstado.DISPONIBLE;
             serializador = new BinaryFormatter();
+            tcpClientServer = tcp;
+            User = user;
+            serverStream = tcpClientServer.GetStream();
             WriteData(new Contacto() {Estado= EstadoCliente.CONECTADO, Ip= Red.GetThisMachineIP(), Nombre=user});
+            dynamic obj = ReadData();
+            Usuarios = obj;
+            BindUserList(Usuarios);
+            tmrPerformance.Enabled = true;
+            disponibleToolStripMenuItem.Checked = true;
+            desactivadaToolStripMenuItem.Checked = true;
         }
         #endregion
 
-        #region Metodos
+        #region Metodos   
+        private void Listening()
+        {
+            while(serverStream.DataAvailable)
+            {
+                dynamic data = ReadData();
+                Mensaje msj = new Mensaje()
+                {
+                    Contenido = data.Contenido,
+                    Destinatario = data.Destinatario,
+                    DetalleChat = data.DetalleChat,
+                    DetalleEstado = data.DetalleEstado,
+                    DetalleServidor = data.DetalleServidor,
+                    DetalleSolicitud = data.DetalleSolicitud,
+                    Encriptado = data.Encriptado,
+                    GrupoId = data.GrupoId,
+                    Remitente = data.Remitente,
+                    Tipo = data.Tipo
+                };
+                colaMensajesEntrada.Add(msj);                
+            }
+        }
+        private void Delivering()
+        {
+            while (colaMensajesEntrada.Count > 0)
+            {
+                Mensaje msj = colaMensajesEntrada[0];
+                colaMensajesEntrada.RemoveAt(0);
+                ProcesarMensaje(msj);
+            }
+        }
+        private void Writening()
+        {
+            Mensaje msj = new Mensaje();
+            while (ColaMensajesSalida.Count > 0)
+            {
+                msj = ColaMensajesSalida[0];
+                ColaMensajesSalida.RemoveAt(0);
+                WriteData(msj);
+            }
+        }
         private void WriteData(object data)
         {
             try
@@ -149,8 +192,15 @@ namespace ChatClient
             switch (msj.DetalleServidor)
             {
                 case DetalleServidor.NUEVO_CONECTADO:
+                    string[]data = msj.Contenido.Split('|');
+                    Usuarios.Add(new Contacto() 
+                        { Nombre = data[0], 
+                            Ip = IPAddress.Parse(data[1]), 
+                            Estado =(EstadoCliente)Enum.Parse(typeof(EstadoCliente), data[2]) });
+                    BindUserList(Usuarios);
                     break;
                 case DetalleServidor.NUEVO_GRUPO:
+
                     break;
             }
         }
@@ -159,9 +209,11 @@ namespace ChatClient
             switch (msj.DetalleChat)
             {
                 case DetalleChat.TEXTO:
-                case DetalleChat.ZUMBIDO:
+                //case DetalleChat.ZUMBIDO:
                     if (msj.Destinatario == Red.BROADCAST)
                     {
+                        if (msj.Encriptado)
+                        { msj.Desencriptar(); }
                         rtbChatGeneral.PrintRTB(msj);
                     }
                     else
@@ -179,9 +231,7 @@ namespace ChatClient
         {
             try
             {
-                frmChat ventana = frmInicio.Ventanas.Find(
-                    delegate(frmChat chat)
-                    {return chat.Contacto.Nombre == msj.Remitente;});
+                frmChat ventana =FindVentana(msj.Remitente);                   
                 if (ventana != null)
                 {
                     ventana.ColaMensajes.Add(msj);
@@ -189,9 +239,7 @@ namespace ChatClient
                 else
                 {
                     frmChat nuevaVentana = new frmChat();
-                    nuevaVentana.Contacto = Usuarios.Find(
-                        delegate(Contacto usuario)
-                        { return usuario.Nombre == msj.Remitente;});
+                    nuevaVentana.Contacto = FindUsuario(msj.Remitente);                        
                     frmInicio.Ventanas.Add(nuevaVentana);
                     frmInicio.Ventanas[frmInicio.Ventanas.IndexOf(nuevaVentana)].ColaMensajes.Add(msj);
                     frmInicio.Ventanas[frmInicio.Ventanas.IndexOf(nuevaVentana)].Show();                    
@@ -206,19 +254,13 @@ namespace ChatClient
         {
             try
             {
-                frmGrupo ventana = frmInicio.VentanasGrupal.Find(
-                    delegate(frmGrupo chat)
-                    { return chat.Grupo.Id == msj.GrupoId; });
+                frmGrupo ventana = FindVentanaGrupo(msj.GrupoId); 
                 if (ventana != null)
-                {
-                    ventana.ColaMensajes.Add(msj);
-                }
+                {  ventana.ColaMensajes.Add(msj); }
                 else
                 {
                     frmGrupo nuevaVentana = new frmGrupo();
-                    nuevaVentana.Grupo = grupos.Find(
-                        delegate(Grupo usuario)
-                        { return usuario.Id == msj.GrupoId; });
+                    nuevaVentana.Grupo = FindGrupo(msj.GrupoId);
                     frmInicio.VentanasGrupal.Add(nuevaVentana);
                     frmInicio.VentanasGrupal[frmInicio.VentanasGrupal.IndexOf(nuevaVentana)].ColaMensajes.Add(msj);
                     frmInicio.VentanasGrupal[frmInicio.VentanasGrupal.IndexOf(nuevaVentana)].Show();
@@ -230,8 +272,8 @@ namespace ChatClient
             }
         }
         public static void RemoveVentanaGrupo(int grupoId)
-        {
-            frmGrupo ventana = frmInicio.VentanasGrupal.Find(
+        {            
+            frmGrupo ventana =   frmInicio.VentanasGrupal.Find(
                delegate(frmGrupo chat)
                {
                    return chat.Grupo.Id == grupoId;
@@ -255,6 +297,102 @@ namespace ChatClient
                 frmInicio.Ventanas.RemoveAt(frmInicio.Ventanas.IndexOf(ventana));
             }
         }
+        public void BindUserList(List<Contacto> usuarios)
+        {
+            lstConectados.Items.Clear();
+            foreach (Contacto usuario in usuarios)
+            {
+                if(usuario.Nombre!=user)
+                lstConectados.Items.Add(usuario.Nombre+"----"+usuario.Estado.ToString());
+            }
+        }
+        public void BindGroupList(List<Grupo> grupos)
+        {
+            lstGrupos.Items.Clear();            
+            foreach (Grupo grupo in grupos)
+            {
+                lstGrupos.Items.Add(grupo.Alias); 
+            }
+        }
+        public bool GenerateGroup(Mensaje msj)
+        {
+            try
+            {
+                List<string> data = new List<string>(msj.Contenido.Split('|'));
+                string alias = data[0];
+                data.RemoveAt(0);
+                Grupo grupo = new Grupo(msj.GrupoId, alias);
+                grupo.Integrantes = data;
+                grupos.Add(grupo);
+                BindGroupList(grupos);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Alert(ex);
+                return false;
+            }
+        }
+        public Contacto FindUsuario(string usuario)
+        {
+            Contacto data=Usuarios.Find(
+                delegate(Contacto cont)
+                    {
+                        return cont.Nombre==usuario;
+                    }
+                );
+            return data;
+        }
+        public frmChat FindVentana(string usuario)
+        {
+            frmChat ventana = Ventanas.Find(
+                       delegate(frmChat chat)
+                       {
+                           return chat.Contacto.Nombre == usuario;
+                       }
+            );
+            return ventana;
+        }
+        public frmGrupo FindVentanaGrupo(string alias)
+        {
+            frmGrupo ventana = VentanasGrupal.Find(
+                      delegate(frmGrupo chat)
+                      {
+                          return chat.Grupo.Alias == alias;
+                      }
+           );
+            return ventana;
+        }
+        public frmGrupo FindVentanaGrupo(int id)
+        {
+            frmGrupo ventana = VentanasGrupal.Find(
+                      delegate(frmGrupo chat)
+                      {
+                          return chat.Grupo.Id == id;
+                      }
+           );
+            return ventana;
+        }
+        public Grupo FindGrupo(string alias)
+        {
+            Grupo grupo = grupos.Find(
+                      delegate(Grupo grup)
+                      {
+                          return grup.Alias == alias;
+                      }
+           );
+            return grupo;
+        }
+        public Grupo FindGrupo(int id)
+        {
+            Grupo grupo = grupos.Find(
+                      delegate(Grupo grup)
+                      {
+                          return grup.Id == id;
+                      }
+           );
+            return grupo;
+        }
         private void Alert(Exception ex)
         {
             MessageBox.Show(ex.Message, "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -263,37 +401,127 @@ namespace ChatClient
 
         #region Eventos
         private void activadaToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            mnuOpciones.Items[0].BackColor = System.Drawing.Color.Bisque;
-            this.encriptacion = true;
+        {      
+            activadaToolStripMenuItem.Checked = true;
+            desactivadaToolStripMenuItem.Checked = false;
+            frmInicio.Encriptacion = true;
         }
         private void desactivadaToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.encriptacion = false;
+            frmInicio.Encriptacion = false;
         }
         private void btnChatGeneral_Click(object sender, EventArgs e)
         {
-            ColaMensajesSalida.Add(new Mensaje(){
-                 Destinatario=Red.BROADCAST,
-                 Encriptado=encriptacion,
-                 Contenido=txtChatGeneral.Text,
-                 Remitente=user
-            });
-            txtChatGeneral.Text = "";
+            if (!txtChatGeneral.Text.Equals(""))
+            {
+                Mensaje msj = new Mensaje()
+                {
+                    Destinatario = Red.BROADCAST,
+                    Encriptado = frmInicio.Encriptacion,
+                    Contenido = txtChatGeneral.Text,
+                    Remitente = user,
+                    Tipo = TipoMensaje.CHAT
+                };
+                if (frmInicio.Encriptacion)
+                { msj.Encriptar(); }
+                ColaMensajesSalida.Add(msj);
+                txtChatGeneral.Text = "";
+            }
         }
         private void frmInicio_FormClosed(object sender, FormClosedEventArgs e)
         {
-            //this.Close();
             serverStream.Close();
             tcpClientServer.Close();
             padre.Show();
-
         }
-        #endregion  
-
-        
-
-        
+        private void lstConectados_DoubleClick(object sender, EventArgs e)
+        {
+            try
+            {
+                if (lstConectados.SelectedIndex != null)
+                {
+                    frmChat ventana = FindVentana(this.lstConectados.SelectedItem.ToString());
+                    if (ventana == null)
+                    {
+                        frmChat NuevaVentana = new frmChat();
+                        NuevaVentana.Contacto =FindUsuario(this.lstConectados.SelectedItem.ToString());
+                        Ventanas.Add(NuevaVentana);
+                        NuevaVentana.Show();
+                    }
+                    else
+                    {
+                        ventana.Show();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Alert(ex); 
+            }
+        }
+        private void lstGrupos_DoubleClick(object sender, EventArgs e)
+        {
+            try 
+            {
+                if (lstGrupos.SelectedIndex != null)                
+                {
+                    frmGrupo chat = FindVentanaGrupo(lstGrupos.SelectedItem.ToString());
+                    if (chat == null)
+                    {
+                        Grupo grup=FindGrupo(lstGrupos.SelectedItem.ToString());
+                        frmGrupo ventana = new frmGrupo();
+                        ventana.Grupo = grup;
+                        VentanasGrupal.Add(ventana);
+                        ventana.Show();
+                    }
+                    else
+                    {
+                        chat.Show();
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                Alert(ex);
+            }
+        }
+        private void tmrPerformance_Tick(object sender, EventArgs e)
+        {
+            Listening();
+            Delivering();
+            Writening();
+        }
+        private void txtChatGeneral_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                btnChatGeneral_Click(null, null);
+            }
+        }
+        private void disponibleToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            disponibleToolStripMenuItem.Checked = true;
+            ocupadoToolStripMenuItem.Checked = false;
+            ausenteToolStripMenuItem.Checked = false;
+        }
+        private void ocupadoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ocupadoToolStripMenuItem.Checked = true;
+            disponibleToolStripMenuItem.Checked = false;
+            ausenteToolStripMenuItem.Checked = false;
+        }
+        private void ausenteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ausenteToolStripMenuItem.Checked = true;
+            disponibleToolStripMenuItem.Checked = false;
+            ausenteToolStripMenuItem.Checked = false;
+        }
+        private void nuevoGrupoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            frmAGrupo ventana = new frmAGrupo();
+            ventana.ShowDialog();           
+        }
+        #endregion            
 
         
     }

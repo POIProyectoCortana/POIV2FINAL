@@ -113,10 +113,8 @@ namespace ChatClient
                     ContactosGrupo += item.ToString() + "|";
                 }
                 ContactosGrupo = ContactosGrupo.Remove(ContactosGrupo.Length - 1, 1);
-                Mensaje msj = new Mensaje(TipoMensaje.SERVIDOR, DetalleServidor.NUEVO_GRUPO, null, txtGrupo.Text);
-                Mensaje msj2 = new Mensaje(TipoMensaje.SERVIDOR, DetalleServidor.NUEVO_GRUPO_CONECTADO, null, ContactosGrupo);
+                Mensaje msj = new Mensaje(TipoMensaje.SERVIDOR, DetalleServidor.NUEVO_GRUPO, null, txtGrupo.Text+"|"+ContactosGrupo);
                 frmInicio.ColaMensajesSalida.Add(msj);
-                frmInicio.ColaMensajesSalida.Add(msj2);
                 this.Close();
             }
         }

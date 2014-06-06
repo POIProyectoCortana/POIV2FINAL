@@ -66,11 +66,11 @@ namespace ChatServer
 
         #region Metodos
         public Contacto GetClientData()
-        {
-            Contacto datos = new Contacto();
-            datos = (Contacto)ReadData();
+        {            
+            dynamic data = ReadData();
             WriteData(servidor.ListaContactos);
-            this.usuario = datos.Nombre;
+            this.usuario = data.Nombre;
+            Contacto datos = new Contacto() {  Estado=data.Estado, Ip=data.Ip, Nombre=data.Nombre};
             return datos;
         }
         public void Start()
@@ -126,6 +126,7 @@ namespace ChatServer
             }
             catch (Exception ex)
             {
+                this.hiloTcpClient.Abort();
                 WriteLog(ex);
             }
         }

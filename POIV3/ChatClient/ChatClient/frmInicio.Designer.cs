@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.grb_Conectados = new System.Windows.Forms.GroupBox();
             this.lstConectados = new System.Windows.Forms.ListBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
@@ -47,6 +48,7 @@
             this.encriptaciónToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.activadaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.desactivadaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tmrPerformance = new System.Windows.Forms.Timer(this.components);
             this.grb_Conectados.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.grb_ChatGeneral.SuspendLayout();
@@ -71,6 +73,7 @@
             this.lstConectados.ScrollAlwaysVisible = true;
             this.lstConectados.Size = new System.Drawing.Size(188, 238);
             this.lstConectados.TabIndex = 0;
+            this.lstConectados.DoubleClick += new System.EventHandler(this.lstConectados_DoubleClick);
             // 
             // groupBox2
             // 
@@ -90,6 +93,7 @@
             this.lstGrupos.ScrollAlwaysVisible = true;
             this.lstGrupos.Size = new System.Drawing.Size(187, 108);
             this.lstGrupos.TabIndex = 0;
+            this.lstGrupos.DoubleClick += new System.EventHandler(this.lstGrupos_DoubleClick);
             // 
             // grb_ChatGeneral
             // 
@@ -120,6 +124,7 @@
             this.txtChatGeneral.Name = "txtChatGeneral";
             this.txtChatGeneral.Size = new System.Drawing.Size(217, 84);
             this.txtChatGeneral.TabIndex = 1;
+            this.txtChatGeneral.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtChatGeneral_KeyDown);
             // 
             // rtbChatGeneral
             // 
@@ -158,6 +163,7 @@
             this.nuevoGrupoToolStripMenuItem.Name = "nuevoGrupoToolStripMenuItem";
             this.nuevoGrupoToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
             this.nuevoGrupoToolStripMenuItem.Text = "Nuevo grupo";
+            this.nuevoGrupoToolStripMenuItem.Click += new System.EventHandler(this.nuevoGrupoToolStripMenuItem_Click);
             // 
             // estadoToolStripMenuItem
             // 
@@ -172,20 +178,23 @@
             // disponibleToolStripMenuItem
             // 
             this.disponibleToolStripMenuItem.Name = "disponibleToolStripMenuItem";
-            this.disponibleToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
+            this.disponibleToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.disponibleToolStripMenuItem.Text = "Disponible";
+            this.disponibleToolStripMenuItem.Click += new System.EventHandler(this.disponibleToolStripMenuItem_Click);
             // 
             // ocupadoToolStripMenuItem
             // 
             this.ocupadoToolStripMenuItem.Name = "ocupadoToolStripMenuItem";
-            this.ocupadoToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
+            this.ocupadoToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.ocupadoToolStripMenuItem.Text = "Ocupado";
+            this.ocupadoToolStripMenuItem.Click += new System.EventHandler(this.ocupadoToolStripMenuItem_Click);
             // 
             // ausenteToolStripMenuItem
             // 
             this.ausenteToolStripMenuItem.Name = "ausenteToolStripMenuItem";
-            this.ausenteToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
+            this.ausenteToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.ausenteToolStripMenuItem.Text = "Ausente";
+            this.ausenteToolStripMenuItem.Click += new System.EventHandler(this.ausenteToolStripMenuItem_Click);
             // 
             // opcionesToolStripMenuItem
             // 
@@ -217,6 +226,10 @@
             this.desactivadaToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
             this.desactivadaToolStripMenuItem.Text = "Desactivada";
             this.desactivadaToolStripMenuItem.Click += new System.EventHandler(this.desactivadaToolStripMenuItem_Click);
+            // 
+            // tmrPerformance
+            // 
+            this.tmrPerformance.Tick += new System.EventHandler(this.tmrPerformance_Tick);
             // 
             // frmInicio
             // 
@@ -263,5 +276,6 @@
         private System.Windows.Forms.ToolStripMenuItem encriptaciónToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem activadaToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem desactivadaToolStripMenuItem;
+        private System.Windows.Forms.Timer tmrPerformance;
     }
 }

@@ -8,16 +8,10 @@ namespace ChatClient
     public partial class frmAcceso : Form
     {
         #region Campos
-        TcpClient tcpClientServer;
-        frmInicio mainScreen;        
+        TcpClient tcpClientServer;              
         #endregion
 
-        #region Propiedades      
-        public frmInicio MainScreen
-        {
-            get { return mainScreen; }
-            set { mainScreen = value; }
-        }
+        #region Propiedades             
         #endregion
 
         #region Constructores
@@ -26,9 +20,7 @@ namespace ChatClient
             InitializeComponent();
             tcpClientServer = new TcpClient();            
         }
-        #endregion
-
-       
+        #endregion       
 
         #region Metodos
         #endregion
@@ -55,13 +47,14 @@ namespace ChatClient
                 else
                 {
                     TcpClient tcpServer= new TcpClient();
-                    tcpServer.Connect(ip, puerto);
-                    frmInicio main = new frmInicio();
-                    main.TcpClientServidor = tcpClientServer;
-                    main.User = txtUsuario.Text;
-                    main.Padre = this;
-                    this.Hide();
-                    main.Show();
+                    if (tcpServer != null)
+                    {
+                        tcpServer.Connect(ip, puerto);
+                        frmInicio main = new frmInicio(tcpServer, txtUsuario.Text);
+                        main.Padre = this;
+                        this.Hide();
+                        main.Show();
+                    }
                 }
             }
             catch (Exception ex)

@@ -72,7 +72,14 @@ namespace ChatServer
                     listaContactos.Add(data);
                     conexiones.Add(NewClient);
                     int index = conexiones.IndexOf(NewClient);
-                    conexiones[index].Start();                   
+                    conexiones[index].Start();
+                    colaMensajes.Add(new Mensaje() 
+                    { 
+                        Destinatario=Red.BROADCAST, 
+                        Tipo= TipoMensaje.SERVIDOR, 
+                        DetalleServidor= DetalleServidor.NUEVO_CONECTADO ,
+                        Contenido=data.Nombre+"|"+data.Ip.ToString()+"|"+data.Estado.ToString()
+                    });
                 }
             }
             catch(Exception ex)
@@ -118,8 +125,11 @@ namespace ChatServer
             switch (msj.DetalleServidor)
             {
                 case DetalleServidor.NUEVO_CONECTADO:
+                    DeliverUser(msj);
                     break;
                 case DetalleServidor.NUEVO_GRUPO:
+                    msj.GrupoId = GenerateGroup(new List<string>(msj.Contenido.Split('|')));
+                    DeliverUser(msj);             
                     break;                    
             }
         }
@@ -128,8 +138,12 @@ namespace ChatServer
             switch (msj.DetalleChat)
             {
                 case DetalleChat.TEXTO:
+                case DetalleChat.ZUMBIDO:
+                    DeliverUser(msj);
                     break;
                 case DetalleChat.TEXTO_GRUPAL:
+                case DetalleChat.ZUMBIDO_GRUPAL:
+                    DeliverGroup(msj.GrupoId, msj, null);
                     break;
             }
         }
@@ -158,13 +172,38 @@ namespace ChatServer
                 }
             }
         }
-        public int GenerateGroup(string alias,List<string>integrantes)
+        public void DeliverUser(Mensaje msj)
         {
-            UtileriasChat.Grupo grupo = new Grupo(generadorIdGrupo, alias);
-            grupo.Integrantes = integrantes;
-            grupos.Add(grupo);
-            generadorIdGrupo++;
-            return grupo.Id;
+            if (msj.Destinatario == Red.BROADCAST)
+            {
+                foreach (ClienteRed cliente in conexiones)
+                {
+                    cliente.ColaMensajes.Add(msj);
+                }
+            }
+            else
+            {
+                ClienteRed cliente = conexiones.Find(
+                               delegate(ClienteRed client)
+                               {
+                                   return client.Usuario == msj.Destinatario;
+                               }
+                       );
+                cliente.ColaMensajes.Add(msj);
+            }
+        }        
+        public int GenerateGroup(List<string>integrantes)
+        {
+            if (integrantes == null)
+            {
+                UtileriasChat.Grupo grupo = new Grupo(generadorIdGrupo, integrantes[0]);
+                integrantes.RemoveAt(0);
+                grupos.Add(grupo);
+                generadorIdGrupo++;
+                grupo.Integrantes = integrantes;
+                return grupo.Id;
+            }
+            else { return 0; }                         
         }
         public void WriteLog(Exception ex)
         {
@@ -210,8 +249,6 @@ namespace ChatServer
             Listener();
             Delivering();
         }
-        #endregion            
-
-        
+        #endregion                    
     }
 }
