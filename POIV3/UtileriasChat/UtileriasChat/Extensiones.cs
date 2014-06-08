@@ -29,12 +29,13 @@ namespace UtileriasChat
                 int EmoticonLength = Mensaje.EmoticonList[i, 0].Length;
                 while (true)
                 {
-                    indexfound = mensaje.Contenido.IndexOf(Mensaje.EmoticonList[i, 0], indexNext);
+                   indexfound = mensaje.Contenido.IndexOf(Mensaje.EmoticonList[i, 0], indexNext);
+                    //indexfound = rtb.Text.IndexOf(Mensaje.EmoticonList[i, 0], indexNext);
                     if (indexfound >= 0)
                     {
                         try
                         {
-                            string emoticonoPath = wanted_path + "\\" + Mensaje.EmoticonList[i, 1];
+                            string emoticonoPath = wanted_path + Mensaje.EmoticonList[i, 1];
                             if (File.Exists(emoticonoPath))
                             {
                                 Bitmap image = new Bitmap(emoticonoPath);
@@ -55,6 +56,35 @@ namespace UtileriasChat
                     else { break; }
                 }
 
+            }
+        }
+
+        public static bool SendToFile(this RichTextBox rtb,string identity)
+        {
+            try
+            {
+                string wanted_path = Path.GetDirectoryName(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory()));
+                string filename = identity + DateTime.Now.ToShortDateString().Replace("/","");
+                string completePath = wanted_path + "\\Conversaciones\\" + filename+".txt";
+                if (File.Exists(completePath))
+                {   
+                    StreamWriter sw = new StreamWriter(completePath, true);
+                    sw.Write(rtb.Text);
+                    rtb.Text = "";
+                    sw.Close();
+                }
+                else 
+                {
+                    StreamWriter sw = File.CreateText(completePath);
+                    sw.Write(rtb.Text);
+                    rtb.Text = "";
+                    sw.Close();
+                }
+                return  true;
+            }
+            catch(Exception)
+            {
+                return false;
             }
         }
     }

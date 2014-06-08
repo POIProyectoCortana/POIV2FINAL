@@ -34,20 +34,24 @@
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.lstGrupos = new System.Windows.Forms.ListBox();
             this.grb_ChatGeneral = new System.Windows.Forms.GroupBox();
+            this.btnBuzz = new System.Windows.Forms.Button();
             this.btnChatGeneral = new System.Windows.Forms.Button();
             this.txtChatGeneral = new System.Windows.Forms.TextBox();
             this.rtbChatGeneral = new System.Windows.Forms.RichTextBox();
             this.mnuOpciones = new System.Windows.Forms.MenuStrip();
             this.chatToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.nuevoGrupoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.estadoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.disponibleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ocupadoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ausenteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.opcionesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.nuevoGrupoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.nuevoGrupoToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.encriptaciónToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.activadaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.desactivadaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.activarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.desactivarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.chatToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.limpiarHistorialToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.enviarConversaciónAUnArchivoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tmrPerformance = new System.Windows.Forms.Timer(this.components);
             this.grb_Conectados.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -97,6 +101,7 @@
             // 
             // grb_ChatGeneral
             // 
+            this.grb_ChatGeneral.Controls.Add(this.btnBuzz);
             this.grb_ChatGeneral.Controls.Add(this.btnChatGeneral);
             this.grb_ChatGeneral.Controls.Add(this.txtChatGeneral);
             this.grb_ChatGeneral.Controls.Add(this.rtbChatGeneral);
@@ -106,6 +111,16 @@
             this.grb_ChatGeneral.TabIndex = 5;
             this.grb_ChatGeneral.TabStop = false;
             this.grb_ChatGeneral.Text = "Chat general";
+            // 
+            // btnBuzz
+            // 
+            this.btnBuzz.Location = new System.Drawing.Point(229, 349);
+            this.btnBuzz.Name = "btnBuzz";
+            this.btnBuzz.Size = new System.Drawing.Size(55, 26);
+            this.btnBuzz.TabIndex = 3;
+            this.btnBuzz.Text = "Buzz";
+            this.btnBuzz.UseVisualStyleBackColor = true;
+            this.btnBuzz.Click += new System.EventHandler(this.btnBuzz_Click);
             // 
             // btnChatGeneral
             // 
@@ -132,7 +147,6 @@
             this.rtbChatGeneral.DetectUrls = false;
             this.rtbChatGeneral.Location = new System.Drawing.Point(6, 19);
             this.rtbChatGeneral.Name = "rtbChatGeneral";
-            this.rtbChatGeneral.ReadOnly = true;
             this.rtbChatGeneral.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
             this.rtbChatGeneral.Size = new System.Drawing.Size(278, 286);
             this.rtbChatGeneral.TabIndex = 0;
@@ -141,8 +155,7 @@
             // mnuOpciones
             // 
             this.mnuOpciones.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.chatToolStripMenuItem,
-            this.opcionesToolStripMenuItem});
+            this.chatToolStripMenuItem});
             this.mnuOpciones.Location = new System.Drawing.Point(0, 0);
             this.mnuOpciones.Name = "mnuOpciones";
             this.mnuOpciones.Size = new System.Drawing.Size(520, 24);
@@ -152,18 +165,13 @@
             // chatToolStripMenuItem
             // 
             this.chatToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.estadoToolStripMenuItem,
             this.nuevoGrupoToolStripMenuItem,
-            this.estadoToolStripMenuItem});
+            this.encriptaciónToolStripMenuItem,
+            this.chatToolStripMenuItem1});
             this.chatToolStripMenuItem.Name = "chatToolStripMenuItem";
-            this.chatToolStripMenuItem.Size = new System.Drawing.Size(46, 20);
-            this.chatToolStripMenuItem.Text = "Chat";
-            // 
-            // nuevoGrupoToolStripMenuItem
-            // 
-            this.nuevoGrupoToolStripMenuItem.Name = "nuevoGrupoToolStripMenuItem";
-            this.nuevoGrupoToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
-            this.nuevoGrupoToolStripMenuItem.Text = "Nuevo grupo";
-            this.nuevoGrupoToolStripMenuItem.Click += new System.EventHandler(this.nuevoGrupoToolStripMenuItem_Click);
+            this.chatToolStripMenuItem.Size = new System.Drawing.Size(69, 20);
+            this.chatToolStripMenuItem.Text = "Opciones";
             // 
             // estadoToolStripMenuItem
             // 
@@ -172,60 +180,90 @@
             this.ocupadoToolStripMenuItem,
             this.ausenteToolStripMenuItem});
             this.estadoToolStripMenuItem.Name = "estadoToolStripMenuItem";
-            this.estadoToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
+            this.estadoToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.estadoToolStripMenuItem.Text = "Estado";
             // 
             // disponibleToolStripMenuItem
             // 
             this.disponibleToolStripMenuItem.Name = "disponibleToolStripMenuItem";
-            this.disponibleToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.disponibleToolStripMenuItem.Size = new System.Drawing.Size(130, 22);
             this.disponibleToolStripMenuItem.Text = "Disponible";
             this.disponibleToolStripMenuItem.Click += new System.EventHandler(this.disponibleToolStripMenuItem_Click);
             // 
             // ocupadoToolStripMenuItem
             // 
             this.ocupadoToolStripMenuItem.Name = "ocupadoToolStripMenuItem";
-            this.ocupadoToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.ocupadoToolStripMenuItem.Size = new System.Drawing.Size(130, 22);
             this.ocupadoToolStripMenuItem.Text = "Ocupado";
             this.ocupadoToolStripMenuItem.Click += new System.EventHandler(this.ocupadoToolStripMenuItem_Click);
             // 
             // ausenteToolStripMenuItem
             // 
             this.ausenteToolStripMenuItem.Name = "ausenteToolStripMenuItem";
-            this.ausenteToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.ausenteToolStripMenuItem.Size = new System.Drawing.Size(130, 22);
             this.ausenteToolStripMenuItem.Text = "Ausente";
             this.ausenteToolStripMenuItem.Click += new System.EventHandler(this.ausenteToolStripMenuItem_Click);
             // 
-            // opcionesToolStripMenuItem
+            // nuevoGrupoToolStripMenuItem
             // 
-            this.opcionesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.encriptaciónToolStripMenuItem});
-            this.opcionesToolStripMenuItem.Name = "opcionesToolStripMenuItem";
-            this.opcionesToolStripMenuItem.Size = new System.Drawing.Size(72, 20);
-            this.opcionesToolStripMenuItem.Text = "Opciones";
+            this.nuevoGrupoToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.nuevoGrupoToolStripMenuItem1});
+            this.nuevoGrupoToolStripMenuItem.Name = "nuevoGrupoToolStripMenuItem";
+            this.nuevoGrupoToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.nuevoGrupoToolStripMenuItem.Text = "Grupos";
+            // 
+            // nuevoGrupoToolStripMenuItem1
+            // 
+            this.nuevoGrupoToolStripMenuItem1.Name = "nuevoGrupoToolStripMenuItem1";
+            this.nuevoGrupoToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.nuevoGrupoToolStripMenuItem1.Text = "Nuevo grupo";
+            this.nuevoGrupoToolStripMenuItem1.Click += new System.EventHandler(this.nuevoGrupoToolStripMenuItem1_Click);
             // 
             // encriptaciónToolStripMenuItem
             // 
             this.encriptaciónToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.activadaToolStripMenuItem,
-            this.desactivadaToolStripMenuItem});
+            this.activarToolStripMenuItem,
+            this.desactivarToolStripMenuItem});
             this.encriptaciónToolStripMenuItem.Name = "encriptaciónToolStripMenuItem";
-            this.encriptaciónToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
+            this.encriptaciónToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.encriptaciónToolStripMenuItem.Text = "Encriptación";
             // 
-            // activadaToolStripMenuItem
+            // activarToolStripMenuItem
             // 
-            this.activadaToolStripMenuItem.Name = "activadaToolStripMenuItem";
-            this.activadaToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
-            this.activadaToolStripMenuItem.Text = "Activada";
-            this.activadaToolStripMenuItem.Click += new System.EventHandler(this.activadaToolStripMenuItem_Click);
+            this.activarToolStripMenuItem.Name = "activarToolStripMenuItem";
+            this.activarToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.activarToolStripMenuItem.Text = "Activar";
+            this.activarToolStripMenuItem.Click += new System.EventHandler(this.activarToolStripMenuItem_Click);
             // 
-            // desactivadaToolStripMenuItem
+            // desactivarToolStripMenuItem
             // 
-            this.desactivadaToolStripMenuItem.Name = "desactivadaToolStripMenuItem";
-            this.desactivadaToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
-            this.desactivadaToolStripMenuItem.Text = "Desactivada";
-            this.desactivadaToolStripMenuItem.Click += new System.EventHandler(this.desactivadaToolStripMenuItem_Click);
+            this.desactivarToolStripMenuItem.Name = "desactivarToolStripMenuItem";
+            this.desactivarToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.desactivarToolStripMenuItem.Text = "Desactivar";
+            this.desactivarToolStripMenuItem.Click += new System.EventHandler(this.desactivarToolStripMenuItem_Click);
+            // 
+            // chatToolStripMenuItem1
+            // 
+            this.chatToolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.limpiarHistorialToolStripMenuItem,
+            this.enviarConversaciónAUnArchivoToolStripMenuItem});
+            this.chatToolStripMenuItem1.Name = "chatToolStripMenuItem1";
+            this.chatToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.chatToolStripMenuItem1.Text = "Chat";
+            // 
+            // limpiarHistorialToolStripMenuItem
+            // 
+            this.limpiarHistorialToolStripMenuItem.Name = "limpiarHistorialToolStripMenuItem";
+            this.limpiarHistorialToolStripMenuItem.Size = new System.Drawing.Size(247, 22);
+            this.limpiarHistorialToolStripMenuItem.Text = "Limpiar historial";
+            this.limpiarHistorialToolStripMenuItem.Click += new System.EventHandler(this.limpiarHistorialToolStripMenuItem_Click);
+            // 
+            // enviarConversaciónAUnArchivoToolStripMenuItem
+            // 
+            this.enviarConversaciónAUnArchivoToolStripMenuItem.Name = "enviarConversaciónAUnArchivoToolStripMenuItem";
+            this.enviarConversaciónAUnArchivoToolStripMenuItem.Size = new System.Drawing.Size(247, 22);
+            this.enviarConversaciónAUnArchivoToolStripMenuItem.Text = "Enviar conversación a un archivo";
+            this.enviarConversaciónAUnArchivoToolStripMenuItem.Click += new System.EventHandler(this.enviarConversaciónAUnArchivoToolStripMenuItem_Click);
             // 
             // tmrPerformance
             // 
@@ -268,14 +306,18 @@
         private System.Windows.Forms.MenuStrip mnuOpciones;
         private System.Windows.Forms.ToolStripMenuItem chatToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem nuevoGrupoToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem opcionesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem estadoToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem disponibleToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem ocupadoToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem ausenteToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem encriptaciónToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem activadaToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem desactivadaToolStripMenuItem;
         private System.Windows.Forms.Timer tmrPerformance;
+        private System.Windows.Forms.Button btnBuzz;
+        private System.Windows.Forms.ToolStripMenuItem nuevoGrupoToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem encriptaciónToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem activarToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem desactivarToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem chatToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem limpiarHistorialToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem enviarConversaciónAUnArchivoToolStripMenuItem;
     }
 }

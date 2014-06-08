@@ -23,7 +23,25 @@ namespace ChatClient
         public Contacto Contacto
         {
             get { return contacto; }
-            set { contacto = value; }
+            set 
+            {
+                this.Text = contacto.Nombre;
+                contacto = value;
+                //Video Sender
+                vidSender.VideoDevice = 0;
+                vidSender.VideoDevice = 0;
+                vidSender.AudioDevice = 0;
+                vidSender.VideoFormat = 0;
+                vidSender.FrameRate = 16;
+                vidSender.VideoBitrate = 128000;
+                vidSender.AudioComplexity = 0;
+                vidSender.AudioQuality = 8;
+                vidSender.SendAudioStream = true;
+                vidSender.SendVideoStream = true;
+                //Video Reciber
+                vidReciver.ReceiveAudioStream = true;
+                vidReciver.ReceiveVideoStream = true;  
+            }
         }
         public List<Mensaje> ColaMensajes
         {
@@ -43,6 +61,8 @@ namespace ChatClient
             InitializeComponent();
             contacto = new Contacto();
             colaMensajes = new List<Mensaje>();
+            desactivarToolStripMenuItem.Checked = true;
+                     
         } 
         #endregion       
 
@@ -66,6 +86,14 @@ namespace ChatClient
                 case DetalleSolicitud.ARCHIVO_CONECTAR:
                     break;
                 case DetalleSolicitud.VIDEO_CONECTAR:
+                    ActivarVideoChat();
+                    activarToolStripMenuItem.Checked = true;
+                    desactivarToolStripMenuItem.Checked=false;
+                    break;
+                case DetalleSolicitud.VIDEO_DESCONECTAR:
+                    DesactivarVideoChat();
+                    desactivarToolStripMenuItem.Checked = true;
+                    activarToolStripMenuItem.Checked = false;
                     break;
             }
         }
@@ -74,10 +102,12 @@ namespace ChatClient
             switch (msj.DetalleChat)
             {
                 case DetalleChat.TEXTO:
+                    Sounds.MessageAlert();
                     rtbContenido.PrintRTB(msj);
                     break;
                 case DetalleChat.ZUMBIDO:
-                    //Sounds.Buzz("");
+                    Sounds.Buzz();
+                    rtbContenido.AppendText(msj.Remitente + " ha enviado un buzz!" + Environment.NewLine);
                     break;
             }
         }
@@ -85,14 +115,55 @@ namespace ChatClient
         {
             MessageBox.Show(ex.Message, "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
+        private void ActivarVideoChat()
+        {
+            try
+            {
+                if (!frmInicio.VideollamadaActiva)
+                {
+                    vidSender.Connect(contacto.Ip.ToString(), 1235);
+                    vidReciver.Listen(Red.GetThisMachineIP().ToString(), 1234);
+                    frmInicio.VideollamadaActiva = true;
+                    activarToolStripMenuItem.Checked = true;
+                    desactivarToolStripMenuItem.Checked = false;
+                }
+                else
+                {
+                    MessageBox.Show("Ya existe una sesion de videochat activa", "ALERTA", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                }
+            }
+            catch (Exception ex)
+            {
+                Alert(ex);
+            }
+        }
+        private void DesactivarVideoChat()
+        {
+
+            if (frmInicio.VideollamadaActiva)
+            {
+                Mensaje msj = new Mensaje()
+                {
+                    Tipo = TipoMensaje.SOLICITUD,
+                    DetalleSolicitud = DetalleSolicitud.VIDEO_DESCONECTAR,
+                    Remitente = user,
+                    Destinatario = contacto.Nombre
+                };
+                frmInicio.ColaMensajesSalida.Add(msj);
+                vidSender.Disconnect();
+                vidReciver.Disconnect();
+                frmInicio.VideollamadaActiva = false;
+                activarToolStripMenuItem.Checked = false;
+                desactivarToolStripMenuItem.Checked = true;
+            }
+        }
         #endregion
 
         #region Eventos
         private void btnEnviar_Click(object sender, EventArgs e)
         {
             try
-            {
-               
+            {               
                 if (!txtContenido.Text.Equals(""))
                 {
                     Mensaje msj = new Mensaje()
@@ -107,6 +178,7 @@ namespace ChatClient
                     if (frmInicio.Encriptacion)
                     { msj.Encriptar(); }
                     frmInicio.ColaMensajesSalida.Add(msj);
+                    rtbContenido.PrintRTB(msj);
                 }
             }
             catch (Exception ex)
@@ -118,14 +190,16 @@ namespace ChatClient
         {
             try
             {
-                frmInicio.ColaMensajesSalida.Add(new Mensaje()
+                Mensaje msj = new Mensaje()
                 {
                     Tipo = TipoMensaje.CHAT,
                     DetalleChat = DetalleChat.ZUMBIDO,
                     Destinatario = contacto.Nombre,
                     Remitente = user,
                     Contenido = txtContenido.Text,
-                });
+                };
+                frmInicio.ColaMensajesSalida.Add(msj);
+                rtbContenido.AppendText(msj.Remitente + " ha enviado un buzz!" + Environment.NewLine);
             }
             catch (Exception ex)
             {
@@ -160,12 +234,8 @@ namespace ChatClient
         {
             try
             {
-                string path = Path.GetDirectoryName(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory())) + "\\Conversaciones\\";
-                string fileName = contacto.Nombre + DateTime.Now.Date + DateTime.Now.TimeOfDay;
-                File.Create(path + fileName);                
-                StreamWriter sw = new StreamWriter(path + fileName);
-                sw.Write(rtbContenido.Text);
-                sw.Close();
+                rtbContenido.SendToFile(contacto.Nombre);
+                rtbContenido.Text = "";
             }
             catch (Exception ex)
             {
@@ -176,6 +246,30 @@ namespace ChatClient
         {
             frmInicio.RemoveVentana(contacto.Nombre);
         }
-        #endregion 
+        private void txtContenido_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                btnEnviar_Click(null, null);
+                txtContenido.Select(0, 0);
+            }
+        }
+        private void activarToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Mensaje msj = new Mensaje()
+            {
+                Tipo = TipoMensaje.SOLICITUD,
+                DetalleSolicitud = DetalleSolicitud.VIDEO_CONECTAR,
+                Remitente = user,
+                Destinatario = contacto.Nombre
+            };
+            frmInicio.ColaMensajesSalida.Add(msj);
+            ActivarVideoChat();
+        }
+        private void desactivarToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DesactivarVideoChat();
+        }
+        #endregion  
     }
 }

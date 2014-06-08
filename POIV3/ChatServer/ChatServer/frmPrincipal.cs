@@ -115,8 +115,10 @@ namespace ChatServer
                     ProcesarChat(msj);
                     break;
                 case TipoMensaje.ESTADO:
+                    DeliverUser(msj);
                     break;
                 case TipoMensaje.SOLICITUD:
+                    DeliverUser(msj);
                     break;
             }
         }
@@ -129,7 +131,7 @@ namespace ChatServer
                     break;
                 case DetalleServidor.NUEVO_GRUPO:
                     msj.GrupoId = GenerateGroup(new List<string>(msj.Contenido.Split('|')));
-                    DeliverUser(msj);             
+                    DeliverGroup(msj.GrupoId,msj,null);             
                     break;                    
             }
         }
@@ -194,13 +196,14 @@ namespace ChatServer
         }        
         public int GenerateGroup(List<string>integrantes)
         {
-            if (integrantes == null)
+            if (integrantes != null)
             {
                 UtileriasChat.Grupo grupo = new Grupo(generadorIdGrupo, integrantes[0]);
                 integrantes.RemoveAt(0);
-                grupos.Add(grupo);
-                generadorIdGrupo++;
                 grupo.Integrantes = integrantes;
+                grupo.Id = generadorIdGrupo;
+                grupos.Add(grupo);
+                generadorIdGrupo++;                
                 return grupo.Id;
             }
             else { return 0; }                         

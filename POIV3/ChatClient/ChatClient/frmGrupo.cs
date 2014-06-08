@@ -65,10 +65,12 @@ namespace ChatClient
             switch (msj.DetalleChat)
             {
                 case DetalleChat.TEXTO:
+                    Sounds.MessageAlert();
                     rtbContenido.PrintRTB(msj);
                     break;
                 case DetalleChat.ZUMBIDO:
-                    //Sounds.Buzz("");
+                    Sounds.Buzz();
+                    rtbContenido.AppendText(msj.Remitente + " ha enviado un buzz!" + Environment.NewLine);
                     break;
             }
         }
@@ -126,13 +128,8 @@ namespace ChatClient
         {
             try
             {
-                string path = Path.GetDirectoryName(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory()))+"\\Conversaciones\\";
-                string fileName = grupo.Alias + DateTime.Now.Date + DateTime.Now.TimeOfDay;
-                File.Create(path + fileName);
-                //FileStream fs=File.Open(path + fileName, FileMode.CreateNew, FileAccess.Write);
-                StreamWriter sw = new StreamWriter(path + fileName);
-                sw.Write(rtbContenido.Text);
-                sw.Close();
+                rtbContenido.SendToFile(grupo.Alias);
+                rtbContenido.Text = "";
             }
             catch (Exception ex)
             {
@@ -143,6 +140,14 @@ namespace ChatClient
         {
 
         }
-        #endregion
+        private void txtContenido_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                btnEnviar_Click(null, null);
+                txtContenido.Select(0, 0);
+            }
+        }
+        #endregion       
     }
 }

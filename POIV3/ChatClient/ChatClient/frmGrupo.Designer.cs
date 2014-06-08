@@ -58,7 +58,7 @@
             this.chatToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.chatToolStripMenuItem1});
             this.chatToolStripMenuItem.Name = "chatToolStripMenuItem";
-            this.chatToolStripMenuItem.Size = new System.Drawing.Size(72, 20);
+            this.chatToolStripMenuItem.Size = new System.Drawing.Size(69, 20);
             this.chatToolStripMenuItem.Text = "Opciones";
             // 
             // chatToolStripMenuItem1
@@ -73,14 +73,14 @@
             // limpiarHistorialToolStripMenuItem
             // 
             this.limpiarHistorialToolStripMenuItem.Name = "limpiarHistorialToolStripMenuItem";
-            this.limpiarHistorialToolStripMenuItem.Size = new System.Drawing.Size(276, 22);
+            this.limpiarHistorialToolStripMenuItem.Size = new System.Drawing.Size(247, 22);
             this.limpiarHistorialToolStripMenuItem.Text = "Limpiar historial";
             this.limpiarHistorialToolStripMenuItem.Click += new System.EventHandler(this.limpiarHistorialToolStripMenuItem_Click);
             // 
             // enviarConversacionAUnArchivoToolStripMenuItem
             // 
             this.enviarConversacionAUnArchivoToolStripMenuItem.Name = "enviarConversacionAUnArchivoToolStripMenuItem";
-            this.enviarConversacionAUnArchivoToolStripMenuItem.Size = new System.Drawing.Size(276, 22);
+            this.enviarConversacionAUnArchivoToolStripMenuItem.Size = new System.Drawing.Size(247, 22);
             this.enviarConversacionAUnArchivoToolStripMenuItem.Text = "Enviar conversacion a un archivo";
             this.enviarConversacionAUnArchivoToolStripMenuItem.Click += new System.EventHandler(this.enviarConversacionAUnArchivoToolStripMenuItem_Click);
             // 
@@ -91,6 +91,7 @@
             this.txtContenido.Name = "txtContenido";
             this.txtContenido.Size = new System.Drawing.Size(358, 54);
             this.txtContenido.TabIndex = 9;
+            this.txtContenido.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtContenido_KeyDown);
             // 
             // btnEnviar
             // 

@@ -25,6 +25,7 @@ namespace ChatClient
         private frmAcceso padre;              
         string user;
         internal static bool Encriptacion=false;
+        internal static bool VideollamadaActiva = false;
         private IFormatter serializador;        
         private NetworkStream serverStream;       
         private DetalleEstado estado;        
@@ -99,11 +100,11 @@ namespace ChatClient
             BindUserList(Usuarios);
             tmrPerformance.Enabled = true;
             disponibleToolStripMenuItem.Checked = true;
-            desactivadaToolStripMenuItem.Checked = true;
+            desactivarToolStripMenuItem.Checked = true;            
         }
         #endregion
 
-        #region Metodos   
+        #region Metodos
         private void Listening()
         {
             while(serverStream.DataAvailable)
@@ -182,8 +183,10 @@ namespace ChatClient
                     ProcesarChat(msj);
                     break;
                 case TipoMensaje.ESTADO:
+                    ProcesarEstado(msj);
                     break;
                 case TipoMensaje.SOLICITUD:
+                    DeliverChat(msj);
                     break;
             }
         }
@@ -200,7 +203,7 @@ namespace ChatClient
                     BindUserList(Usuarios);
                     break;
                 case DetalleServidor.NUEVO_GRUPO:
-
+                    GenerateGroup(msj);
                     break;
             }
         }
@@ -209,12 +212,23 @@ namespace ChatClient
             switch (msj.DetalleChat)
             {
                 case DetalleChat.TEXTO:
-                //case DetalleChat.ZUMBIDO:
+                case DetalleChat.ZUMBIDO:
                     if (msj.Destinatario == Red.BROADCAST)
                     {
-                        if (msj.Encriptado)
-                        { msj.Desencriptar(); }
-                        rtbChatGeneral.PrintRTB(msj);
+                        switch (msj.DetalleChat)
+                        {
+                            case DetalleChat.TEXTO:
+                                Sounds.MessageAlert();
+                                if (msj.Encriptado)
+                                { msj.Desencriptar(); }
+                                rtbChatGeneral.PrintRTB(msj);
+                                
+                                break;
+                            case DetalleChat.ZUMBIDO:
+                                Sounds.MessageAlert();
+                                rtbChatGeneral.AppendText(msj.Remitente + " ha enviado un buzz!" + Environment.NewLine);
+                                break;
+                        }
                     }
                     else
                     {
@@ -226,6 +240,16 @@ namespace ChatClient
                     DeliverGrupo(msj);
                     break;
             }
+        }
+        public void ProcesarEstado(Mensaje msj)
+        {
+            Contacto contacto = FindUsuario(msj.Remitente);
+            if (contacto != null)
+            {
+                int index=Usuarios.IndexOf(contacto);
+                Usuarios[index].EstadoChat = msj.DetalleEstado;
+            }
+            BindUserList(Usuarios);
         }
         private void DeliverChat(Mensaje msj)
         {
@@ -239,7 +263,8 @@ namespace ChatClient
                 else
                 {
                     frmChat nuevaVentana = new frmChat();
-                    nuevaVentana.Contacto = FindUsuario(msj.Remitente);                        
+                    nuevaVentana.Contacto = FindUsuario(msj.Remitente);
+                    nuevaVentana.User = user;  
                     frmInicio.Ventanas.Add(nuevaVentana);
                     frmInicio.Ventanas[frmInicio.Ventanas.IndexOf(nuevaVentana)].ColaMensajes.Add(msj);
                     frmInicio.Ventanas[frmInicio.Ventanas.IndexOf(nuevaVentana)].Show();                    
@@ -303,7 +328,7 @@ namespace ChatClient
             foreach (Contacto usuario in usuarios)
             {
                 if(usuario.Nombre!=user)
-                lstConectados.Items.Add(usuario.Nombre+"----"+usuario.Estado.ToString());
+                lstConectados.Items.Add(usuario.Nombre+"----"+usuario.EstadoChat.ToString());
             }
         }
         public void BindGroupList(List<Grupo> grupos)
@@ -400,16 +425,6 @@ namespace ChatClient
         #endregion
 
         #region Eventos
-        private void activadaToolStripMenuItem_Click(object sender, EventArgs e)
-        {      
-            activadaToolStripMenuItem.Checked = true;
-            desactivadaToolStripMenuItem.Checked = false;
-            frmInicio.Encriptacion = true;
-        }
-        private void desactivadaToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            frmInicio.Encriptacion = false;
-        }
         private void btnChatGeneral_Click(object sender, EventArgs e)
         {
             if (!txtChatGeneral.Text.Equals(""))
@@ -420,7 +435,8 @@ namespace ChatClient
                     Encriptado = frmInicio.Encriptacion,
                     Contenido = txtChatGeneral.Text,
                     Remitente = user,
-                    Tipo = TipoMensaje.CHAT
+                    Tipo = TipoMensaje.CHAT,
+                    DetalleChat =DetalleChat.TEXTO
                 };
                 if (frmInicio.Encriptacion)
                 { msj.Encriptar(); }
@@ -438,13 +454,18 @@ namespace ChatClient
         {
             try
             {
-                if (lstConectados.SelectedIndex != null)
+                if (lstConectados.SelectedIndex >=0 )
                 {
                     frmChat ventana = FindVentana(this.lstConectados.SelectedItem.ToString());
                     if (ventana == null)
                     {
                         frmChat NuevaVentana = new frmChat();
-                        NuevaVentana.Contacto =FindUsuario(this.lstConectados.SelectedItem.ToString());
+                        int index1=lstConectados.SelectedItem.ToString().IndexOf("-");
+                        int index2=lstConectados.SelectedItem.ToString().Length -
+                            lstConectados.SelectedItem.ToString().IndexOf("-");
+                        string usuario = this.lstConectados.SelectedItem.ToString().Remove(index1,index2);
+                        NuevaVentana.Contacto =FindUsuario(usuario);
+                        NuevaVentana.User = user;
                         Ventanas.Add(NuevaVentana);
                         NuevaVentana.Show();
                     }
@@ -463,7 +484,7 @@ namespace ChatClient
         {
             try 
             {
-                if (lstGrupos.SelectedIndex != null)                
+                if (lstGrupos.SelectedIndex >=0)                
                 {
                     frmGrupo chat = FindVentanaGrupo(lstGrupos.SelectedItem.ToString());
                     if (chat == null)
@@ -496,33 +517,92 @@ namespace ChatClient
             if (e.KeyCode == Keys.Enter)
             {
                 btnChatGeneral_Click(null, null);
+                txtChatGeneral.Select(0, 0);
             }
         }
         private void disponibleToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            Mensaje msj = new Mensaje()
+            {
+                Destinatario = Red.BROADCAST,
+                Encriptado = frmInicio.Encriptacion,
+                Remitente = user,
+                Tipo = TipoMensaje.ESTADO,
+                DetalleEstado =DetalleEstado.DISPONIBLE            
+            };
+            ColaMensajesSalida.Add(msj);
             disponibleToolStripMenuItem.Checked = true;
             ocupadoToolStripMenuItem.Checked = false;
             ausenteToolStripMenuItem.Checked = false;
         }
         private void ocupadoToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            Mensaje msj = new Mensaje()
+            {
+                Destinatario = Red.BROADCAST,
+                Encriptado = frmInicio.Encriptacion,
+                Remitente = user,
+                Tipo = TipoMensaje.ESTADO,
+                DetalleEstado = DetalleEstado.OCUPADO
+            };
+            ColaMensajesSalida.Add(msj);
             ocupadoToolStripMenuItem.Checked = true;
             disponibleToolStripMenuItem.Checked = false;
             ausenteToolStripMenuItem.Checked = false;
         }
         private void ausenteToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            Mensaje msj = new Mensaje()
+            {
+                Destinatario = Red.BROADCAST,
+                Encriptado = frmInicio.Encriptacion,
+                Remitente = user,
+                Tipo = TipoMensaje.ESTADO,
+                DetalleEstado = DetalleEstado.AUSENTE
+            };
+            ColaMensajesSalida.Add(msj);
             ausenteToolStripMenuItem.Checked = true;
             disponibleToolStripMenuItem.Checked = false;
             ausenteToolStripMenuItem.Checked = false;
+        }      
+        private void btnBuzz_Click(object sender, EventArgs e)
+        {
+            Mensaje msj = new Mensaje()
+            {
+                Destinatario = Red.BROADCAST,
+                Encriptado = frmInicio.Encriptacion,
+                Contenido = "",
+                Remitente = user,
+                Tipo = TipoMensaje.CHAT,
+                DetalleChat=DetalleChat.ZUMBIDO
+            };
+            ColaMensajesSalida.Add(msj);
         }
-        private void nuevoGrupoToolStripMenuItem_Click(object sender, EventArgs e)
+        private void nuevoGrupoToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             frmAGrupo ventana = new frmAGrupo();
-            ventana.ShowDialog();           
+            ventana.ShowDialog();
         }
-        #endregion            
-
-        
+        private void activarToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            frmInicio.Encriptacion = true;
+            activarToolStripMenuItem.Checked = true;
+            desactivarToolStripMenuItem.Checked = false;
+        }
+        private void desactivarToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            frmInicio.Encriptacion = false;
+            desactivarToolStripMenuItem.Checked = true;
+            activarToolStripMenuItem.Checked = false;
+        }
+        private void limpiarHistorialToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            rtbChatGeneral.Text = "";
+        }
+        private void enviarConversaciónAUnArchivoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            rtbChatGeneral.SendToFile(Red.BROADCAST);
+        }
+        #endregion          
     }
 }

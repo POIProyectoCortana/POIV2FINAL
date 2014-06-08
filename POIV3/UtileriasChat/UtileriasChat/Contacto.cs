@@ -16,6 +16,7 @@ namespace UtileriasChat
             private String nombre;
             private IPAddress ip;
             private EstadoCliente estado;
+            private DetalleEstado estadoChat;
         #endregion
 
         #region Propiedades
@@ -33,6 +34,11 @@ namespace UtileriasChat
             {
                 get { return estado; }
                 set { estado = value; }
+            }
+            public DetalleEstado EstadoChat
+            {
+                get { return estadoChat; }
+                set { estadoChat = value; }
             }
         #endregion
 
