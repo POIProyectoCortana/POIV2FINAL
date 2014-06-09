@@ -8,6 +8,8 @@ using System.Text;
 using System.Windows.Forms;
 using UtileriasChat;
 using System.IO;
+using System.Net;
+using System.Net.Sockets;
 
 namespace ChatClient
 {
@@ -16,7 +18,10 @@ namespace ChatClient
         #region Campos
         private Contacto contacto;
         private string user;      
-        private List<Mensaje> colaMensajes;             
+        private List<Mensaje> colaMensajes;
+        private OpenFileDialog ofd;
+        private TcpClient tcpSendFile;
+        private TcpListener tcpReciveFile;
         #endregion
 
         #region Propiedades
@@ -27,20 +32,20 @@ namespace ChatClient
             {
                 this.Text = contacto.Nombre;
                 contacto = value;
-                //Video Sender
-                vidSender.VideoDevice = 0;
-                vidSender.VideoDevice = 0;
-                vidSender.AudioDevice = 0;
-                vidSender.VideoFormat = 0;
-                vidSender.FrameRate = 16;
-                vidSender.VideoBitrate = 128000;
-                vidSender.AudioComplexity = 0;
-                vidSender.AudioQuality = 8;
-                vidSender.SendAudioStream = true;
-                vidSender.SendVideoStream = true;
-                //Video Reciber
-                vidReciver.ReceiveAudioStream = true;
-                vidReciver.ReceiveVideoStream = true;  
+                ////Video Sender
+                //vidSender.VideoDevice = 0;
+                //vidSender.VideoDevice = 0;
+                //vidSender.AudioDevice = 0;
+                //vidSender.VideoFormat = 0;
+                //vidSender.FrameRate = 16;
+                //vidSender.VideoBitrate = 128000;
+                //vidSender.AudioComplexity = 0;
+                //vidSender.AudioQuality = 8;
+                //vidSender.SendAudioStream = true;
+                //vidSender.SendVideoStream = true;
+                ////Video Reciber
+                //vidReciver.ReceiveAudioStream = true;
+                //vidReciver.ReceiveVideoStream = true;  
             }
         }
         public List<Mensaje> ColaMensajes
@@ -61,8 +66,7 @@ namespace ChatClient
             InitializeComponent();
             contacto = new Contacto();
             colaMensajes = new List<Mensaje>();
-            desactivarToolStripMenuItem.Checked = true;
-                     
+            desactivarToolStripMenuItem.Checked = true;      
         } 
         #endregion       
 
@@ -84,6 +88,13 @@ namespace ChatClient
             switch(msj.DetalleSolicitud)
             {
                 case DetalleSolicitud.ARCHIVO_CONECTAR:
+                    tcpReciveFile = new TcpListener(Red.GetThisMachineIP(),2090);
+                    tcpReciveFile.Start(1);
+                    if (tcpReciveFile.Pending())
+                    {
+                        TcpClient client = tcpReciveFile.AcceptTcpClient();
+
+                    }
                     break;
                 case DetalleSolicitud.VIDEO_CONECTAR:
                     ActivarVideoChat();
@@ -121,8 +132,8 @@ namespace ChatClient
             {
                 if (!frmInicio.VideollamadaActiva)
                 {
-                    vidSender.Connect(contacto.Ip.ToString(), 1235);
-                    vidReciver.Listen(Red.GetThisMachineIP().ToString(), 1234);
+                    //vidSender.Connect(contacto.Ip.ToString(), 1235);
+                    //vidReciver.Listen(Red.GetThisMachineIP().ToString(), 1234);
                     frmInicio.VideollamadaActiva = true;
                     activarToolStripMenuItem.Checked = true;
                     desactivarToolStripMenuItem.Checked = false;
@@ -150,8 +161,8 @@ namespace ChatClient
                     Destinatario = contacto.Nombre
                 };
                 frmInicio.ColaMensajesSalida.Add(msj);
-                vidSender.Disconnect();
-                vidReciver.Disconnect();
+                //vidSender.Disconnect();
+                //vidReciver.Disconnect();
                 frmInicio.VideollamadaActiva = false;
                 activarToolStripMenuItem.Checked = false;
                 desactivarToolStripMenuItem.Checked = true;
@@ -270,6 +281,54 @@ namespace ChatClient
         {
             DesactivarVideoChat();
         }
+        private void enviarArchivoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Mensaje msj = new Mensaje()
+            {
+                Tipo= TipoMensaje.SOLICITUD,
+                Destinatario=contacto.Nombre,
+                DetalleSolicitud= DetalleSolicitud.ARCHIVO_CONECTAR,
+                Remitente=user
+            };
+            frmInicio.ColaMensajesSalida.Add(msj);
+            ofd = new OpenFileDialog();
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    FileInfo fileInfo = new FileInfo(ofd.FileName);
+                    string fileI = fileInfo.Name + "|" + fileInfo.Length;
+                    tcpSendFile = new TcpClient();
+                    tcpSendFile.Connect(contacto.Ip, 2090);
+                    StreamWriter sw = new StreamWriter(tcpSendFile.GetStream());
+                    sw.WriteLine(fileI);
+                    sw.Flush();
+                    sw.Close();
+                    Stream s= tcpSendFile.GetStream();
+                    byte[] data= File.ReadAllBytes(ofd.FileName);
+                    s.Write(data,0, data.Length);
+                    tcpSendFile.Close();
+                }
+                catch(Exception ex)
+                {
+                    Alert(ex);
+                }
+                
+            }
+            else
+            {
+                Mensaje msj2 = new Mensaje()
+                {
+                    Tipo = TipoMensaje.SOLICITUD,
+                    Destinatario = contacto.Nombre,
+                    DetalleSolicitud = DetalleSolicitud.ARCHIVO_DESCONECTAR,
+                    Remitente = user
+                };
+                frmInicio.ColaMensajesSalida.Add(msj2);
+            }
+        }
         #endregion  
+
+        
     }
 }

@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmChat));
             this.btnBuzz = new System.Windows.Forms.Button();
             this.btnEnviar = new System.Windows.Forms.Button();
             this.txtContenido = new System.Windows.Forms.TextBox();
@@ -37,6 +36,7 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.mnuOpciones = new System.Windows.Forms.ToolStripMenuItem();
             this.videllamadaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.activarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.desactivarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.chatToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.limpiarHistorialToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -46,14 +46,9 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.tmrPerformance = new System.Windows.Forms.Timer(this.components);
-            this.vidReciver = new AxVideoChatReceiverLib.AxVideoChatReceiver();
-            this.vidSender = new AxVideoChatSenderLib.AxVideoChatSender();
-            this.activarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.vidReciver)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.vidSender)).BeginInit();
             this.SuspendLayout();
             // 
             // btnBuzz
@@ -111,7 +106,7 @@
             this.chatToolStripMenuItem,
             this.archivosToolStripMenuItem});
             this.mnuOpciones.Name = "mnuOpciones";
-            this.mnuOpciones.Size = new System.Drawing.Size(69, 20);
+            this.mnuOpciones.Size = new System.Drawing.Size(72, 20);
             this.mnuOpciones.Text = "Opciones";
             // 
             // videllamadaToolStripMenuItem
@@ -120,13 +115,20 @@
             this.activarToolStripMenuItem,
             this.desactivarToolStripMenuItem});
             this.videllamadaToolStripMenuItem.Name = "videllamadaToolStripMenuItem";
-            this.videllamadaToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.videllamadaToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
             this.videllamadaToolStripMenuItem.Text = "Videllamada";
+            // 
+            // activarToolStripMenuItem
+            // 
+            this.activarToolStripMenuItem.Name = "activarToolStripMenuItem";
+            this.activarToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.activarToolStripMenuItem.Text = "Activar";
+            this.activarToolStripMenuItem.Click += new System.EventHandler(this.activarToolStripMenuItem_Click);
             // 
             // desactivarToolStripMenuItem
             // 
             this.desactivarToolStripMenuItem.Name = "desactivarToolStripMenuItem";
-            this.desactivarToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.desactivarToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
             this.desactivarToolStripMenuItem.Text = "Desactivar";
             this.desactivarToolStripMenuItem.Click += new System.EventHandler(this.desactivarToolStripMenuItem_Click);
             // 
@@ -136,20 +138,20 @@
             this.limpiarHistorialToolStripMenuItem,
             this.enviarConversacionAUnArchivoToolStripMenuItem});
             this.chatToolStripMenuItem.Name = "chatToolStripMenuItem";
-            this.chatToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.chatToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
             this.chatToolStripMenuItem.Text = "Chat";
             // 
             // limpiarHistorialToolStripMenuItem
             // 
             this.limpiarHistorialToolStripMenuItem.Name = "limpiarHistorialToolStripMenuItem";
-            this.limpiarHistorialToolStripMenuItem.Size = new System.Drawing.Size(247, 22);
+            this.limpiarHistorialToolStripMenuItem.Size = new System.Drawing.Size(276, 22);
             this.limpiarHistorialToolStripMenuItem.Text = "Limpiar historial";
             this.limpiarHistorialToolStripMenuItem.Click += new System.EventHandler(this.limpiarHistorialToolStripMenuItem_Click);
             // 
             // enviarConversacionAUnArchivoToolStripMenuItem
             // 
             this.enviarConversacionAUnArchivoToolStripMenuItem.Name = "enviarConversacionAUnArchivoToolStripMenuItem";
-            this.enviarConversacionAUnArchivoToolStripMenuItem.Size = new System.Drawing.Size(247, 22);
+            this.enviarConversacionAUnArchivoToolStripMenuItem.Size = new System.Drawing.Size(276, 22);
             this.enviarConversacionAUnArchivoToolStripMenuItem.Text = "Enviar conversacion a un archivo";
             this.enviarConversacionAUnArchivoToolStripMenuItem.Click += new System.EventHandler(this.enviarConversacionAUnArchivoToolStripMenuItem_Click);
             // 
@@ -158,14 +160,15 @@
             this.archivosToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.enviarArchivoToolStripMenuItem});
             this.archivosToolStripMenuItem.Name = "archivosToolStripMenuItem";
-            this.archivosToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.archivosToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
             this.archivosToolStripMenuItem.Text = "Archivos";
             // 
             // enviarArchivoToolStripMenuItem
             // 
             this.enviarArchivoToolStripMenuItem.Name = "enviarArchivoToolStripMenuItem";
-            this.enviarArchivoToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.enviarArchivoToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
             this.enviarArchivoToolStripMenuItem.Text = "Enviar archivo";
+            this.enviarArchivoToolStripMenuItem.Click += new System.EventHandler(this.enviarArchivoToolStripMenuItem_Click);
             // 
             // pictureBox1
             // 
@@ -187,38 +190,11 @@
             // 
             this.tmrPerformance.Tick += new System.EventHandler(this.tmrPerformance_Tick);
             // 
-            // vidReciver
-            // 
-            this.vidReciver.Enabled = true;
-            this.vidReciver.Location = new System.Drawing.Point(13, 27);
-            this.vidReciver.Name = "vidReciver";
-            this.vidReciver.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("vidReciver.OcxState")));
-            this.vidReciver.Size = new System.Drawing.Size(311, 236);
-            this.vidReciver.TabIndex = 20;
-            // 
-            // vidSender
-            // 
-            this.vidSender.Enabled = true;
-            this.vidSender.Location = new System.Drawing.Point(71, 269);
-            this.vidSender.Name = "vidSender";
-            this.vidSender.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("vidSender.OcxState")));
-            this.vidSender.Size = new System.Drawing.Size(194, 124);
-            this.vidSender.TabIndex = 21;
-            // 
-            // activarToolStripMenuItem
-            // 
-            this.activarToolStripMenuItem.Name = "activarToolStripMenuItem";
-            this.activarToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.activarToolStripMenuItem.Text = "Activar";
-            this.activarToolStripMenuItem.Click += new System.EventHandler(this.activarToolStripMenuItem_Click);
-            // 
             // frmChat
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(613, 405);
-            this.Controls.Add(this.vidSender);
-            this.Controls.Add(this.vidReciver);
             this.Controls.Add(this.pictureBox2);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.btnBuzz);
@@ -234,8 +210,6 @@
             this.menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.vidReciver)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.vidSender)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -258,8 +232,8 @@
         private System.Windows.Forms.ToolStripMenuItem archivosToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem enviarArchivoToolStripMenuItem;
         private System.Windows.Forms.Timer tmrPerformance;
-        private AxVideoChatReceiverLib.AxVideoChatReceiver vidReciver;
-        private AxVideoChatSenderLib.AxVideoChatSender vidSender;
+        //private AxVideoChatReceiverLib.AxVideoChatReceiver vidReciver;
+        //private AxVideoChatSenderLib.AxVideoChatSender vidSender;
         private System.Windows.Forms.ToolStripMenuItem desactivarToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem activarToolStripMenuItem;
     }
